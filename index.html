@@ -1,3 +1,5 @@
+<!doctype html>
+<meta charset="utf-8">
 <title>Fitelligence</title>
 <link rel="icon" href="media/icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -233,6 +235,8 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .donebox h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,6vw,72px);line-height:.9;text-transform:uppercase}
 
 /* library */
+.back{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:none;border:0;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:6px 8px 6px 2px;cursor:pointer}.back:hover{color:var(--ink,#fff)}
+.dsub{color:var(--muted);font-size:13px}
 .libh{display:grid;gap:4px}
 .libh h1{margin:0;font-family:var(--display);font-weight:800;font-size:44px;line-height:.95;text-transform:uppercase}
 .libgroup{display:grid;gap:10px}
@@ -1018,6 +1022,11 @@ setInterval(()=>{
 /* ===================== LIBRARY ===================== */
 function renderLib(){
   stopAnim();const v=document.getElementById('view');
+  if(st.libEx){const [pid,eid]=st.libEx.split(':');const p=PROGRAM.find(x=>x.id===pid),ex=p&&p.ex.find(e=>e.id===eid);
+    if(ex){v.innerHTML=`<button type="button" class="back" data-libback="1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Hareketler</button>
+     <section class="detail" aria-label="${esc(ex.name)}"><div class="dtop"><span class="eyebrow">${esc(p.name)}</span><h2>${esc(ex.name)}</h2><small class="dsub">${ex.kur?KUR[ex.kur].w:MODE[ex.mode]} · ${repsLabel(ex)}</small></div>
+     <div class="dgrid">${stageHTML(ex)}<div class="howto">${howto(ex)}</div></div></section>`;mountMain(ex);return}
+    st.libEx=null}
   v.innerHTML=`<div class="libh"><span class="eyebrow">Hareket kütüphanesi</span><h1>Hareketler</h1></div>`+PROGRAM.map(p=>`<section class="libgroup"><h2>${esc(p.name)} · ${esc(p.focus)}</h2><div class="lib">${p.ex.map((e,i)=>`
     <button type="button" class="lcard" data-open="${p.id}:${e.id}"><div class="th">${poster(e)?`<img src="${poster(e)}" alt="" loading="lazy">`:`<span class="n">${i+1}</span>`}</div>
     <div class="cb"><b>${esc(e.name)}</b><small>${MODE[e.mode]} · ${repsLabel(e)}</small></div></button>`).join('')}</div></section>`).join('');
@@ -1033,10 +1042,11 @@ document.addEventListener('click',ev=>{
   const t=ev.target.closest('button');if(!t)return;
   if(t.dataset.wk!==undefined){const v=+t.dataset.wk;st.wk=v===0?0:st.wk+v;const ds=weekDays();const inw=ds.some(d=>ymd(d)===ymd(today));
     st.date=inw?defaultDate():ymd(ds.find(d=>planFor(ymd(d)))||ds[0]);st.ex=null;st.tab='today';render();return}
-  if(t.dataset.tab){st.tab=t.dataset.tab;render();window.scrollTo({top:0});return}
+  if(t.dataset.tab){st.tab=t.dataset.tab;st.libEx=null;render();window.scrollTo({top:0});return}
   if(t.dataset.date){st.date=t.dataset.date;st.ex=null;st.tab='today';render();return}
   if(t.dataset.ex){st.ex=t.dataset.ex;renderPlan();return}
-  if(t.dataset.open){const [pid,eid]=t.dataset.open.split(':');const d=weekDays().find(x=>DOW_PLAN[x.getDay()]===pid);if(d)st.date=ymd(d);st.ex=eid;st.tab='today';render();window.scrollTo({top:0});return}
+  if(t.dataset.open){st.libY=window.scrollY;st.libEx=t.dataset.open;renderLib();window.scrollTo({top:0});return}
+  if(t.dataset.libback){st.libEx=null;renderLib();window.scrollTo({top:st.libY||0});return}
   switch(t.id){
     case 'startRun':startRun();break;
     case 'warmDone':beginSets();break;

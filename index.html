@@ -247,6 +247,8 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .srow{display:flex;gap:10px;flex-wrap:wrap}.stp{display:flex;align-items:center;gap:6px}.stp button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink,#fff);font-size:18px;font-weight:700;cursor:pointer}
 .stp button:hover{border-color:var(--amber)}.stp b{min-width:42px;text-align:center;font-family:var(--display);font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}.stp span{font-size:12px;color:var(--muted)}
 .prev{margin:0;font-size:13px;color:var(--muted)}.prev b{color:var(--ink,#fff)}
+.nut.nutov{display:block;max-width:none}
+.main{min-width:0}.topbar{min-width:0}.topbar .seg{min-width:0;overflow-x:auto;scrollbar-width:none;flex:1 1 auto}.topbar .seg::-webkit-scrollbar{display:none}.topbar .seg button{flex:0 0 auto}
 .tmr{display:grid;justify-items:center;gap:12px}.ring.sm{width:min(190px,52vw)}.ring.sm .tv b{font-size:50px}.ring.sm .tv span{font-size:11px;letter-spacing:.1em}
 .warm li.cur{outline:2px solid var(--amber);outline-offset:-2px}
 .libh{display:grid;gap:4px}
@@ -305,6 +307,252 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .ckey{display:grid;gap:12px;padding:18px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}.ckey p{margin:0;color:var(--muted)}.ckey b{color:var(--ink)}
 .clab{font-size:13px;font-weight:600;color:var(--muted)}.clab small{font-weight:500}
 .ckey textarea{font:inherit;font-size:14px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);resize:vertical}.ckey textarea:focus{outline:none;border-color:var(--amber)}
+/* ===== Nutrition module (ported from AI Trainer), scoped under .nut ===== */
+.nut{--accent:var(--amber);--accent-ink:var(--amber-ink);--accent-soft:rgba(240,179,35,.14);
+  --pro:#EC7A5F;--carb:#E2B33F;--fat:#66BD8A;--fib:#A596E0;--ok:#5BBF89;--warn:#DFA647;--bad:#E86F5E;
+  display:grid;gap:14px;max-width:780px;color:var(--ink)}
+.nut button,.nut input,.nut select,.nut textarea{font:inherit;color:inherit}
+.nut .card{border-radius:var(--r-md)}
+/* neutralise Fitelligence rules that share class names */
+.nut .row{justify-content:flex-start}.nut .stats{margin-top:0}.nut .stat span,.nut .stat b{font-size:inherit;font-weight:inherit;letter-spacing:normal;text-transform:none;color:inherit}
+.nut .track{display:block;gap:0}.nut .track i{flex:none;height:auto;margin:0}.nut .mt{flex:none;max-width:none}.nut .pill{height:auto}.nut .chip{white-space:normal}.nut .cue{margin:0}
+.nut button,.nut input,.nut select,.nut textarea{font:inherit;color:inherit}
+.nut button{cursor:pointer}
+.nut :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nut .num{font-family:var(--display);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.nut .tab-nums{font-variant-numeric:tabular-nums}
+.nut .muted{color:var(--muted)}
+.nut .small{font-size:13px}
+.nut .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.nut .card.flat{background:var(--surface-2)}
+.nut h2.sec{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin:0;color:var(--muted)}
+.nut h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:.03em;margin:0;text-transform:uppercase;text-wrap:balance}
+.nut p{margin:0}
+.nut .dh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.nut .dt{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.1;text-transform:uppercase;letter-spacing:.03em;min-width:0}
+.nut .dt .ds{font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
+.nut .dt .rel{font-family:var(--body);font-size:10px;font-weight:700;letter-spacing:.08em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.nut .dctl{display:flex;align-items:center;gap:4px;flex:none}
+.nut .pill{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;padding:0 10px;font-weight:600;font-size:12px;height:28px}
+.nut .dctl .iconbtn{width:28px;height:28px;border-radius:50%}
+.nut .dctl .iconbtn svg{width:14px;height:14px}
+.nut .dstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.nut .dc{border:0;background:transparent;border-radius:12px;padding:5px 0 4px;display:grid;justify-items:center;gap:2px;min-width:0;color:inherit}
+.nut .dc .dw{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.nut .dc .rg{position:relative;width:38px;height:38px;display:grid;place-items:center}
+.nut .dc .rg svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.nut .dc .rg circle{fill:none;stroke-width:3}
+.nut .dc .rg .tr{stroke:var(--line)}
+.nut .dc .rg .pg{stroke:var(--accent);stroke-linecap:round}
+.nut .dc .rg .pg.ok{stroke:var(--ok)}
+.nut .dc .rg .pg.hi{stroke:var(--warn)}
+.nut .dc .dn{position:relative;font-size:15px;font-weight:600;line-height:1}
+.nut .dc.tod .dn{color:var(--accent)}
+.nut .dc.sel{background:var(--ink)}
+.nut .dc.sel .dw{color:var(--surface);opacity:.7}
+.nut .dc.sel .dn{color:var(--surface)}
+.nut .dc.sel .rg .tr{stroke:var(--surface);opacity:.3}
+.nut .dc.sel .rg .pg,.nut .dc.sel .rg .pg.ok,.nut .dc.sel .rg .pg.hi{stroke:var(--surface)}
+.nut .iconbtn{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.nut .iconbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nut .btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.nut .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nut .btn.ghost{background:transparent}
+.nut .btn.danger{color:var(--bad);border-color:var(--bad);background:transparent}
+.nut .btn.sm{padding:6px 10px;font-size:13px}
+.nut .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nut .between{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.nut .kcal{display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:end}
+.nut .kcal .big{font-family:var(--display);font-weight:700;font-size:52px;line-height:.9;font-variant-numeric:tabular-nums}
+.nut .kcal .big span{font-size:22px;color:var(--muted);font-weight:600;margin-left:4px}
+.nut .kcal .left{text-align:right}
+.nut .kcal .left .v{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.nut .kcal .left .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.nut .track{height:10px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;position:relative}
+.nut .track>i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:5px}
+.nut .track.over>i{background:var(--warn)}
+.nut .macros{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.nut .macro .lab{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
+.nut .macro .lab::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
+.nut .macro .val{font-family:var(--display);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums;margin:2px 0 4px}
+.nut .macro .val span{color:var(--muted);font-size:14px}
+.nut .macro .track{height:6px}
+.nut .macro .track>i{background:var(--c)}
+@media (max-width:460px){.nut .macros{grid-template-columns:repeat(2,1fr)}
+.nut .kcal .big{font-size:44px}}
+.nut .water{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.nut .water button{width:30px;height:38px;border-radius:4px 4px 8px 8px;border:1.5px solid var(--accent);background:transparent;padding:0}
+.nut .water button.on{background:var(--accent)}
+.nut .meal-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.nut .meal-h .sum{font-size:13px;color:var(--muted)}
+.nut .meal-h .sum b{color:var(--ink);font-family:var(--display);font-size:17px;font-weight:600}
+.nut .entries{display:grid}
+.nut .entry{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.nut .entry:first-child{border-top:0}
+.nut .entry .nm{min-width:0;background:none;border:0;padding:0;text-align:left}
+.nut .entry .nm b{font-weight:600;display:block;overflow-wrap:anywhere}
+.nut .entry .nm small{color:var(--muted);font-size:12.5px}
+.nut .entry .kc{font-family:var(--display);font-weight:600;font-size:17px;font-variant-numeric:tabular-nums;text-align:right}
+.nut .entry .x{width:30px;height:30px;border-radius:6px;border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1}
+.nut .pcf{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nut .pcf i{font-style:normal;font-weight:600}
+.nut .pcf .p{color:var(--pro)}
+.nut .pcf .c{color:var(--carb)}
+.nut .pcf .f{color:var(--fat)}
+.nut .add{margin-top:6px;width:100%;border:1px dashed var(--line);background:transparent;border-radius:8px;padding:8px;color:var(--accent);font-weight:600}
+.nut .backdrop{position:fixed;inset:0;background:rgba(10,14,12,.45);z-index:40}
+.nut .sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);border-radius:16px 16px 0 0;max-height:88vh;display:flex;flex-direction:column;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:640px){.nut .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:560px;border-radius:14px;border:1px solid var(--line);max-height:82vh}}
+.nut .sheet .sh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.nut .sheet .sb{overflow:auto;padding:12px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));display:grid;gap:12px;align-content:start}
+.nut .field{display:grid;gap:4px;min-width:0}
+.nut .field label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.nut .inp{width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:16px;min-width:0}
+.nut select.inp{appearance:auto}
+.nut .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.nut .chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+.nut .chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.nut .results{display:grid}
+.nut .res{display:grid;grid-template-columns:1fr auto;gap:8px;text-align:left;border:0;border-top:1px solid var(--line);background:none;padding:10px 2px}
+.nut .res:first-child{border-top:0}
+.nut .res b{font-weight:600}
+.nut .res .k{font-family:var(--display);font-weight:600;font-size:16px;text-align:right;white-space:nowrap}
+.nut .res small{display:block;color:var(--muted);font-size:12.5px}
+.nut .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nut .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.nut .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:460px){.nut .grid4{grid-template-columns:repeat(2,1fr)}}
+.nut .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.nut .seg button{border:0;background:var(--surface);padding:8px 12px;font-weight:600;font-size:13px}
+.nut .seg button.on{background:var(--ink);color:var(--surface)}
+.nut .preview{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--surface-2);border-radius:8px;padding:10px;text-align:center}
+.nut .preview .v{font-family:var(--display);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.nut .preview .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.nut .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.nut .wd{border:1px solid var(--line);border-radius:8px;padding:6px 2px;text-align:center;background:var(--surface);min-width:0}
+.nut .wd .n{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.nut .wd .t{font-family:var(--display);font-weight:600;font-size:14px;white-space:nowrap}
+.nut .wd.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.nut .wd.done{background:var(--accent-soft)}
+.nut .wd.done .t::after{content:" ✓";color:var(--ok)}
+.nut .daypick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nut .daypick button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 4px;text-align:center}
+.nut .daypick button b{display:block;font-family:var(--display);font-size:17px;letter-spacing:.03em}
+.nut .daypick button small{font-size:11px;color:var(--muted)}
+.nut .daypick button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.nut .daypick button.on small{color:inherit;opacity:.75}
+.nut .ex{display:grid;gap:10px}
+.nut .ex-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.nut .ex-h .ord{font-family:var(--display);font-weight:700;color:var(--muted);font-size:15px;margin-right:6px}
+.nut .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--muted);white-space:nowrap}
+.nut .rx{font-family:var(--display);font-weight:600;font-size:16px;font-variant-numeric:tabular-nums}
+.nut .cue{font-size:13.5px;color:var(--muted)}
+.nut .hint{font-size:13px;border-left:3px solid var(--ok);padding:4px 0 4px 10px;color:var(--ink)}
+.nut .sets{display:grid;gap:6px}
+.nut .set{display:grid;grid-template-columns:28px 1fr 1fr 44px;gap:8px;align-items:center}
+.nut .set .i{font-family:var(--display);font-weight:600;color:var(--muted);text-align:center}
+.nut .set .inp{padding:8px 10px;text-align:center;font-family:var(--display);font-size:18px;font-weight:600}
+.nut .set .unit{position:relative}
+.nut .set .unit span{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+.nut .chk{width:44px;height:40px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.nut .chk svg{width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2.5}
+.nut .chk.on{background:var(--ok);border-color:var(--ok)}
+.nut .chk.on svg{stroke:#fff}
+.nut .sethead{display:grid;grid-template-columns:28px 1fr 1fr 44px;gap:8px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;text-align:center}
+.nut [hidden]{display:none!important}
+.nut .cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px}
+.nut .cb{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:inherit;font:inherit;padding:10px 12px;min-width:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.nut .cb b{display:block;font-weight:600}
+.nut .cb small{display:block;color:var(--muted);font-size:12px}
+.nut .cb .cn{font-size:26px;font-weight:700;min-width:28px;text-align:right;color:var(--muted)}
+.nut .cb.on{border-color:var(--accent);background:var(--accent-soft)}
+.nut .cb.on .cn{color:var(--accent)}
+.nut .cb:active{transform:scale(.98)}
+.nut #timer{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:35;background:var(--ink);color:var(--surface);border-radius:999px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.nut #timer .tv{font-size:24px;font-weight:700;min-width:56px}
+.nut #timer .tl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.nut #timer button{border:0;border-radius:999px;padding:7px 12px;background:var(--surface);color:var(--ink);font-weight:600;font-size:13px}
+.nut #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(132px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--surface);border-radius:8px;padding:10px 14px;display:flex;gap:12px;align-items:center;max-width:calc(100% - 32px);font-size:14px}
+.nut #toast button{border:0;background:transparent;color:var(--accent-soft);font-weight:700;text-decoration:underline}
+.nut .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:520px){.nut .stats{grid-template-columns:repeat(2,1fr)}}
+.nut .stat .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.nut .stat .v{font-family:var(--display);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
+.nut .stat .v span{font-size:14px;color:var(--muted);font-weight:600}
+.nut .chart{width:100%;height:auto;display:block}
+.nut .advice{border-left:4px solid var(--c,var(--accent));padding:10px 12px;background:var(--surface-2);border-radius:0 8px 8px 0;display:grid;gap:8px}
+.nut .wlist{display:grid;max-height:260px;overflow:auto}
+.nut .wlist .r{display:grid;grid-template-columns:1fr auto 30px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.nut .wlist .r:first-child{border-top:0}
+.nut .guide{display:grid;gap:10px}
+.nut .guide ul,.nut .guide ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.nut .guide li{max-width:65ch}
+.nut .sched{width:100%;border-collapse:collapse;font-size:14px}
+.nut .sched td{padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}
+.nut .sched td:first-child{font-weight:600;width:96px;white-space:nowrap}
+.nut .sched th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:6px;font-weight:600}
+.nut .plates{display:inline-flex;gap:12px;align-items:center;flex:none}
+.nut .db{display:inline-flex;align-items:center;gap:2px}
+.nut .db i{display:block;width:5px;height:20px;background:var(--ink);border-radius:1.5px}
+.nut .db em{display:block;width:18px;height:4px;background:var(--muted);border-radius:2px}
+.nut .mark{width:28px;height:28px;flex:none}
+.nut .flow{list-style:none;margin:0;padding:0;display:grid}
+.nut .flow li{display:grid;grid-template-columns:104px 1fr;gap:10px;padding:7px 8px 7px 12px;border-left:3px solid var(--line)}
+.nut .flow li.k-ders{border-left-color:var(--muted)}
+.nut .flow li.k-ogun{border-left-color:var(--carb)}
+.nut .flow li.k-antrenman{border-left-color:var(--accent)}
+.nut .flow li.k-antrenman b{color:var(--accent)}
+.nut .flow li.past{opacity:.5}
+.nut .flow li.next{background:var(--surface-2);border-radius:0 6px 6px 0}
+.nut .flow .ft{font-weight:600;font-size:16px}
+.nut .flow .fl{min-width:0}
+.nut .flow .fl b{font-weight:600;display:block;overflow-wrap:anywhere}
+.nut .flow .fl small{color:var(--muted);font-size:12px}
+.nut .mt{font-size:15px;color:var(--muted);font-weight:600;margin-left:6px;letter-spacing:0}
+.nut .phase{background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:12px 16px;display:grid;gap:4px}
+.nut .phase .pw{font-size:13px;letter-spacing:.1em;text-transform:uppercase;opacity:.8;margin-right:10px}
+.nut .phase b{font-family:var(--display);font-size:20px;letter-spacing:.03em;text-transform:uppercase}
+.nut .mbar{margin-top:2px}
+.nut .sups{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nut .sup{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center;min-width:0;border:1px solid var(--line);border-radius:10px;background:none;text-align:left;padding:8px 10px;color:inherit}
+.nut .sup.on{border-color:var(--ok)}
+.nut .sup .chk{width:24px;height:24px;border-radius:50%}
+.nut .sup .chk svg{width:14px;height:14px}
+.nut .sup .sl{min-width:0}
+.nut .sup .sl b{display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nut .sup .sl small{display:block;color:var(--muted);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nut .sup.on .sl b{color:var(--muted)}
+.nut .bp{display:grid;gap:8px;margin:12px 0 6px}
+.nut .bpg{border:1px solid var(--line);border-radius:12px;padding:4px 12px 4px}
+.nut .bpg.has{border-color:var(--accent)}
+.nut .bpgh{display:grid;grid-template-columns:1fr auto 20px;gap:10px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:10px 0;color:inherit;font:inherit}
+.nut .bpgh b{display:block;font-weight:600}
+.nut .bpgh small{display:block;color:var(--muted);font-size:12.5px}
+.nut .bpr{border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+.nut .bpr.on{border-color:var(--accent);background:var(--accent-soft)}
+.nut .bph{display:grid;grid-template-columns:auto 1fr;align-items:center}
+.nut .radio{width:48px;height:52px;border:0;background:none;display:grid;place-items:center;padding:0}
+.nut .radio i{width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center}
+.nut .radio[aria-checked="true"] i{border-color:var(--accent)}
+.nut .radio[aria-checked="true"] i::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent)}
+.nut .bpt{display:grid;grid-template-columns:1fr auto 20px;gap:10px;align-items:center;border:0;background:none;text-align:left;padding:8px 12px 8px 0;min-width:0}
+.nut .bpt b{display:block;font-weight:600}
+.nut .bpt small{display:block;color:var(--muted);font-size:12.5px}
+.nut .bpm{font-size:15px;white-space:nowrap}
+.nut .chev{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;transition:transform .2s}
+.nut .chev.up{transform:rotate(180deg)}
+.nut .bpd{padding:0 14px 12px 48px;display:grid;gap:8px}
+.nut .bpd ul{list-style:none;margin:0;padding:0;display:grid;gap:3px;font-size:14px}
+.nut .bpd li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:3px 0}
+@media (max-width:420px){.nut .bpd{padding-left:14px}
+.nut .bpm{font-size:13px}}
+.nut .mbar .track{height:6px}
+.nut .kur{display:flex;align-items:center;gap:12px;padding:4px 4px 0;font-size:14px;flex-wrap:wrap}
+.nut .wd.school .t{color:var(--muted);font-weight:500}
+.nut .ex.ss{border-bottom:2px dashed var(--accent)}
+.nut .banner{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 12px}
+.nut .empty{color:var(--muted);font-size:14px;padding:6px 0}
+@media (prefers-reduced-motion:no-preference){.nut .track>i{transition:width .35s ease}}
 </style>
 
 <div class="app" lang="tr">
@@ -322,6 +570,7 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
     <div id="view" style="display:grid;gap:20px"></div>
   </main>
 </div>
+<div class="nut nutov"><div id="sheetRoot"></div><div id="timer" hidden><span class="tl">Dinlenme</span><span class="tv num" id="timerV">0:00</span><button data-act="timerAdd" type="button">+15 sn</button><button data-act="timerStop" type="button">Bitir</button></div><div id="toast" hidden><span id="toastMsg"></span><button id="toastUndo" type="button" hidden>Geri al</button></div></div>
 
 <script>
 /* ===================== PROGRAM ===================== */
@@ -894,6 +1143,10 @@ const IC={
  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+ food:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 2 2v9M11 3v7a2 2 0 0 1-2 2M17 21V3c-2 1.5-3 4-3 7s1 4 3 4"/></svg>',
+ prog:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 16l4-5 4 3 6-8"/></svg>',
+ guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4zM5 17a3 3 0 0 1 3-3h11"/></svg>',
+ set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>'
 };
 const vidId=ex=>ex.vid||ex.anim;
@@ -906,7 +1159,7 @@ const COOL=Object.values(COOLDOWNS).map(c=>[c.reps,c.name]);
 /* ===================== RENDER: SHELL ===================== */
 const DN=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
 function renderNav(){
-  const items=[['today','Antrenman',IC.dumb],['lib','Hareketler',IC.lib]];
+  const items=[['today','Antrenman',IC.dumb],['lib','Hareketler',IC.lib],['food','Beslenme',IC.food],['prog','İlerleme',IC.prog],['nguide','Rehber',IC.guide],['nset','Ayarlar',IC.set]];
   document.getElementById('nav').innerHTML=items.map(([k,l,i])=>`<button type="button" data-tab="${k}" aria-current="${st.tab===k?'page':'false'}">${i}${l}</button>`).join('');
   document.getElementById('seg').innerHTML=items.map(([k,l])=>`<button type="button" data-tab="${k}" aria-current="${st.tab===k?'page':'false'}">${l}</button>`).join('');
   const ph=phaseInfo(ymd(today)),cur=ph.w?ph.cw:0;
@@ -1085,7 +1338,9 @@ function exportData(){const days={};
       exercises:p?p.ex.map(x=>({name:x.name,sets:setsFor(x,d),reps:repsLabel(x),load:x.kur?kurW(x):MODE[x.mode]})):[],
       kcal:e.secs?kcalOf(e.secs):e.kcal})}
   return {app:'fitelligence',v:1,updated:new Date().toISOString(),bodyKg:bodyKg(),heightCm:HEIGHT,programStart:PROGRAM_START,
+    nutrition:typeof NUT!=='undefined'?NUT.summary():null,
     schedule:Object.fromEntries(Object.entries(DOW_PLAN).map(([k,v])=>[['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'][k],PROGRAM.find(p=>p.id===v).name])),days}}
+let nutT=null;window.nutChanged=()=>{clearTimeout(nutT);nutT=setTimeout(ghPush,15000)};
 async function ghPush(){const t=ghTok();if(!t||syncState.busy)return;syncState.busy=true;syncState.msg='';paintSync();
   const H={Authorization:'Bearer '+t,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
   try{let sha;const g=await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`,{headers:H,cache:'no-store'});
@@ -1099,7 +1354,7 @@ async function ghPush(){const t=ghTok();if(!t||syncState.busy)return;syncState.b
   syncState.busy=false;paintSync()}
 /* calories: MET × kg × hours per phase, active (net of resting 1 MET), corrected by Mifflin–St Jeor RMR */
 const MET={warm:3.5,work:6.0,rest:1.5,cool:2.3},HEIGHT=175,BYEAR=2005;
-const bodyKg=()=>{try{const v=parseFloat(localStorage.getItem('fit-bw'));return v>30&&v<200?v:70}catch(e){return 70}};
+const bodyKg=()=>{try{if(typeof NUT!=='undefined'){const w=NUT.weight();if(w>30&&w<200)return Math.round(w*10)/10}const v=parseFloat(localStorage.getItem('fit-bw'));return v>30&&v<200?v:70}catch(e){return 70}};
 function kcalOf(secs,kg=bodyKg()){if(!secs)return 0;const age=new Date().getFullYear()-BYEAR,rmr=10*kg+6.25*HEIGHT-5*age+5,corr=rmr/(kg*24);
   let k=0;for(const m in MET)k+=Math.max(0,MET[m]-1)*kg*((secs[m]||0)/3600);return Math.round(k*corr)}
 function phaseKey(r){return r.mode==='warm'?'warm':r.mode==='work'?'work':r.mode==='cool'?'cool':r.mode==='rest'?(r.next==='warm'||r.next==='sets'?'warm':'rest'):null}
@@ -1117,7 +1372,7 @@ function renderRun(){
   if(r.mode==='done'){
     v.innerHTML=`<section class="donebox"><span class="donetag">${IC.check.replace('<svg','<svg width="16" height="16"')}Antrenman tamamlandı</span><h1>${esc(p.name)} bitti</h1>
       <div class="stats"><div class="stat"><b>${r.i+1}</b><span>set</span></div><div class="stat"><b>${mmss(r.dur)}</b><span>süre</span></div><div class="stat"><b id="kcalV">${kcalOf(r.secs)}</b><span>kcal</span></div></div>
-      <p class="kcalnote">Tahmini aktif kalori · vücut ağırlığın <input id="bw" type="number" min="35" max="180" step="0.5" value="${bodyKg()}" aria-label="Vücut ağırlığı (kg)"> kg</p>
+      <p class="kcalnote">Tahmini aktif kalori · ${fmtKg(bodyKg())} kg ile hesaplandı (kilonu İlerleme'den güncelle)</p>
       <button type="button" class="cta" id="backPlan">Programa dön</button></section>`;return}
   const head=`<div class="runbar"><span class="rt">${esc(p.name)} <span>· ${r.mode==='warm'||r.next==='warm'||r.next==='sets'?'Isınma':r.mode==='cool'||r.next==='cool'?'Soğuma':`${r.i+1}/${r.q.length}`}</span></span>
       <span class="clock" id="elapsed">${mmss((Date.now()-r.started)/1000)}</span>
@@ -1210,6 +1465,7 @@ function renderLib(){
 function render(){
   renderNav();renderWeek();
   if(st.tab==='lib'){renderLib();return}
+  if(['food','prog','nguide','nset'].includes(st.tab)){stopAnim();if(typeof NUT!=='undefined')NUT.render();return}
   st.run&&st.run.date===st.date?renderRun():renderPlan();
 }
 
@@ -1255,7 +1511,7 @@ render();
 /* ===================== BACKUP ===================== */
 document.addEventListener('click',e=>{
   if(e.target.id==='bkOut'){
-    const data=JSON.stringify({app:'fitelligence',v:1,saved:new Date().toISOString(),log:st.log},null,1);
+    const data=JSON.stringify({app:'fitelligence',v:2,saved:new Date().toISOString(),log:st.log,nut:typeof NUT!=='undefined'?NUT.data():null},null,1);
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
     a.download=`fitelligence-yedek-${ymd(new Date())}.json`;document.body.appendChild(a);a.click();
     setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
@@ -1272,8 +1528,896 @@ document.addEventListener('change',e=>{
   const r=new FileReader();
   r.onload=()=>{try{const j=JSON.parse(r.result);if(j.app!=='fitelligence'||typeof j.log!=='object')throw 0;
     if(!confirm('Yedek yüklensin mi? Mevcut kayıtların yerine geçer.'))return;
-    st.log=j.log;store();location.reload()}catch(_){alert('Bu dosya bir Fitelligence yedeği değil.')}};
+    st.log=j.log;store();if(j.nut&&typeof NUT!=='undefined')NUT.load(j.nut);location.reload()}catch(_){alert('Bu dosya bir Fitelligence yedeği değil.')}};
   r.readAsText(e.target.files[0]);e.target.value='';
 });
+/* ===================== NUTRITION (ported from AI Trainer) ===================== */
+const NUT=(()=>{
+
+/* ===================== DATA ===================== */
+// [id, ad, kategori, kcal, protein, karb, yağ, lif] — 100 g başına; [porsiyon adı, porsiyon gramı]
+const FOODS_RAW=[
+['yumurta','Yumurta','protein',143,12.6,0.7,9.5,0,'adet',50],
+['yumurtabeyaz','Yumurta beyazı','protein',52,10.9,0.7,0.2,0,'adet',33],
+['tavukgogus','Tavuk göğsü (ızgara/haşlama)','protein',165,31,0,3.6,0,'porsiyon',150],
+['tavukbut','Tavuk but (derisiz, pişmiş)','protein',209,26,0,10.9,0,'porsiyon',150],
+['kiyma','Dana kıyma (orta yağlı, çiğ)','protein',215,18.6,0,15,0,'porsiyon',125],
+['gpbiryani','Gurmepack Tavuk Biryani','yemek',164,8.8,14.5,7.8,0,'paket',250],
+['gpsis','Gurmepack Tavuk Şiş & Bulgur Pilavı','yemek',159,14.1,13.4,4.9,0,'paket',380],
+['gpbarbeku','Gurmepack Barbekü Tavuk Fusilli','yemek',136,9,13.8,5,0,'paket',360],
+['bbmgogus','BBM Haşlanmış Tavuk Göğsü & Pirinç Pilavı','yemek',162,20,14,3,0,'paket',350],
+['bbmsis','BBM Izgara Tavuk Şiş & Siyez Bulguru','yemek',140,11,13,5.2,0,'paket',300],
+['tadafileto','Tada Tavuk Fileto','yemek',164,25.4,0,7,0,'adet',135],
+['yaylabulgur','Yayla Nohutlu Bulgur Pilavı','yemek',171,4.4,25.9,5,2.4,'paket',250],
+['domatessos','Domatesli makarna sosu (Heinz, şeker ilavesiz)','sebze',55,1.7,9,1.2,1.5,'porsiyon',125],
+['kofte','Izgara köfte','protein',240,20,6,15,0.5,'porsiyon',150],
+['ton','Ton balığı (suda, süzülmüş)','protein',116,25.5,0,0.8,0,'kutu',110],
+['antrikot','Antrikot (çiğ ağırlık)','protein',260,17.5,0,21,0,'dilim',220],
+['tonmigros','Ton balığı (Migros iri parçalı, süzülmüş)','protein',191,22.5,1.6,10.5,0,'kutu',104],
+['somon','Somon (pişmiş)','protein',208,20,0,13,0,'porsiyon',150],
+['hamsi','Hamsi / istavrit (pişmiş)','protein',160,22,0,7.5,0,'porsiyon',150],
+['whey','Whey protein tozu','protein',400,78,8,6,0,'ölçek',30],
+['beyazpeynir','Beyaz peynir (tam yağlı)','sut',264,14.2,4.1,21.3,0,'dilim',30],
+['kasar','Kaşar peyniri','sut',360,26,1,28,0,'dilim',20],
+['lor','Lor peyniri (yağsız)','sut',81,15,3,1,0,'yemek kaşığı',20],
+['suzme','Süzme yoğurt','sut',97,9,4,5,0,'kase',200],
+['yogurt','Yoğurt (tam yağlı)','sut',61,3.5,4.7,3.3,0,'kase',200],
+['sut','Süt (tam yağlı)','sut',61,3.2,4.8,3.3,0,'bardak',200],
+['sutyarim','Süt (yarım yağlı)','sut',46,3.3,4.8,1.5,0,'bardak',200],
+['kefir','Kefir','sut',55,3.3,4.5,2.5,0,'bardak',200],
+['ayran','Ayran','sut',37,1.7,2.3,1.8,0,'bardak',200],
+['yulaf','Yulaf ezmesi','karb',379,13.2,67.7,6.5,10,'yemek kaşığı',10],
+['tamekmek','Tam buğday ekmeği','karb',247,13,41,3.4,7,'dilim',30],
+['ekmek','Beyaz ekmek','karb',265,9,49,3.2,2.7,'dilim',30],
+['lavas','Lavaş','karb',275,9,55,1.2,2,'adet',60],
+['simit','Simit','karb',315,10,58,5,3,'adet',100],
+['bulgur','Bulgur pilavı','karb',110,3.1,18.6,2.8,4.5,'tabak',200],
+['pilav','Pirinç pilavı (tereyağlı)','karb',158,2.8,28,3.8,0.4,'tabak',200],
+['pirinc','Pirinç (sade haşlanmış)','karb',130,2.7,28,0.3,0.4,'tabak',200],
+['makarna','Makarna (haşlanmış)','karb',158,5.8,31,0.9,1.8,'tabak',200],
+['tammakarna','Tam buğday makarna (haşlanmış)','karb',149,6,30,1.7,4,'tabak',200],
+['patates','Patates (haşlanmış/fırın)','karb',90,2.2,20.5,0.1,2,'orta boy',170],
+['kurufasulye','Kuru fasulye yemeği (ev)','baklagil',110,6,15,3,5,'tabak',250],
+['fasulyehaslama','Kuru fasulye (haşlanmış)','baklagil',127,8.7,22.8,0.5,6.4,'kase',150],
+['mercimek','Kırmızı mercimek (haşlanmış)','baklagil',116,9,20,0.4,7.9,'kase',150],
+['mercimekcorba','Mercimek çorbası','baklagil',70,4,10,1.8,2.5,'kase',250],
+['nohut','Nohut (haşlanmış)','baklagil',164,8.9,27.4,2.6,7.6,'kase',150],
+['muz','Muz','meyve',89,1.1,22.8,0.3,2.6,'orta boy',120],
+['elma','Elma','meyve',52,0.3,13.8,0.2,2.4,'orta boy',180],
+['portakal','Portakal / mandalina','meyve',47,0.9,11.8,0.1,2.4,'orta boy',130],
+['hurma','Hurma (kuru)','meyve',282,2.5,75,0.4,8,'adet',8],
+['kuruuzum','Kuru üzüm','meyve',299,3.1,79,0.5,3.7,'yemek kaşığı',15],
+['domates','Domates','sebze',18,0.9,3.9,0.2,1.2,'orta boy',120],
+['salatalik','Salatalık','sebze',15,0.7,3.6,0.1,0.5,'adet',100],
+['salata','Karışık salata (sossuz)','sebze',20,1.3,3.5,0.2,2,'kase',150],
+['brokoli','Brokoli','sebze',35,2.4,7.2,0.4,2.6,'kase',150],
+['sebzeyemegi','Zeytinyağlı sebze yemeği','sebze',75,1.8,7,4.5,2.5,'tabak',250],
+['zeytin','Zeytin','sebze',145,1,4,15,3.3,'adet',4],
+['zeytinyagi','Sızma zeytinyağı','yag',884,0,0,100,0,'yemek kaşığı',10],
+['tereyagi','Tereyağı','yag',717,0.9,0.1,81,0,'tatlı kaşığı',5],
+['fistikezmesi','Fıstık ezmesi (şekersiz)','yag',588,25,20,50,6,'yemek kaşığı',16],
+['ceviz','Ceviz içi','yag',654,15.2,13.7,65.2,6.7,'avuç',30],
+['badem','Badem','yag',579,21,21.6,49.9,12.5,'avuç',30],
+['findik','Fındık','yag',628,15,16.7,60.8,9.7,'avuç',30],
+['tahin','Tahin','yag',595,17,21,54,9,'yemek kaşığı',15],
+['fistikezmesi','Fıstık ezmesi (%100)','yag',600,25,14,50,8,'yemek kaşığı',15],
+['kuruyemis','Çiğ kuruyemiş (ceviz / badem / fındık)','yag',620,17,17.3,58.6,9.6,'avuç',15],
+['pekmez','Pekmez','diger',290,0.5,72,0.1,0,'yemek kaşığı',20],
+['bal','Bal','diger',304,0.3,82,0,0,'tatlı kaşığı',7],
+['bitter','Bitter çikolata (%80–85)','diger',590,10,28,47,12,'kare',8],
+['menemen','Menemen','yemek',100,5.5,4,7,1.2,'porsiyon',200],
+['tost','Kaşarlı tost','yemek',300,13,33,13,2,'adet',120],
+['borek','Peynirli börek','yemek',260,10,24,14,1,'dilim',120],
+['tavuksote','Tavuk sote','yemek',140,17,4,6,1,'porsiyon',250],
+['durum','Tavuk döner dürüm','yemek',216,12,22,9,1.5,'adet',300],
+['lahmacun','Lahmacun','yemek',230,10,30,7,2,'adet',130],
+['manti','Mantı (yoğurtlu)','yemek',180,8,20,7,1,'porsiyon',250],
+['hamburger','Hamburger (fast food)','yemek',245,13,24,11,1.5,'adet',220],
+['sutlac','Sütlaç','yemek',120,3.5,20,3,0,'kase',200],
+['yemekhane','Yemekhane tabldot (çorba + ana yemek + pilav)','yemek',135,5.5,17,5,1.5,'tepsi',600],
+['proteinbar','Protein bar','diger',367,33,37,12,5,'adet',60],
+['lifalifk','Lifalif kuruyemişli yulaf bar','diger',521,13,39,33,6.5,'bar',35],
+['fellas','Fellas protein bar (kalori tahmini)','diger',406,25,41,16,12,'bar',32],
+['kahve','Filtre kahve (sade)','diger',2,0.3,0,0,0,'termos',400]
+];
+const FOODS=FOODS_RAW.map(a=>({id:a[0],name:a[1],cat:a[2],kcal:a[3],p:a[4],c:a[5],f:a[6],fib:a[7],pn:a[8],pg:a[9]}));
+const CATS=[['all','Tümü'],['protein','Et · tavuk · balık'],['sut','Süt ürünleri'],['karb','Tahıl · ekmek'],['baklagil','Baklagil'],['meyve','Meyve'],['sebze','Sebze'],['yag','Yağ · kuruyemiş'],['yemek','Yemekler'],['diger','Tatlı · diğer'],['ozel','Benim']];
+const MEALS=[['kahvalti','Kahvaltı'],['atistirma','Kahve & atıştırmalık'],['aksam','Akşam yemeği'],['ekstra','Meyve & ekstra']];
+// Günlük hedefin öğünlere dağılımı: kalori ve protein payı
+const SPLIT={kahvalti:{k:.33,p:.33},atistirma:{k:.19,p:.10},aksam:{k:.36,p:.40},ekstra:{k:.12,p:.17}};
+const MEAL_HINT={kahvalti:'Günün en büyük iki öğününden biri. Yumurta + yulaf + kefir ya da yoğurt; aşağıdaki iki profilden birini seç.',
+ atistirma:'Kahvenin yanında şekerli bir şey değil, proteinli bir şey: süzme yoğurt, tost, ayran, kuruyemiş.',
+ aksam:'Tabağın yarısı karbonhidrat (bulgur, pilav, makarna, patates), çeyreği protein, çeyreği sebze.',
+ ekstra:'Hazırlık gerektirmeyen küçük ekler: meyve, kefir ya da süzme yoğurt, bir avuç kuruyemiş, hurma.'};
+const LEGACY_MEAL={ogle:'atistirma',ara:'atistirma',gece:'ekstra'};
+const mealOf=e=>LEGACY_MEAL[e.meal]||e.meal;
+// Kahvaltı profilleri: o sabah hangisini yediysen tek dokunuşla eklenir
+const BREAKFAST={
+ sahanda:{name:'Sahanda',sub:'Yulaflı Lorlu Yumurta',recipe:'3 yumurtayı 3 yemek kaşığı yulaf (30 g) ve 3 yemek kaşığı lorla çırp, 2–3 dk beklet. 1 tatlı kaşığı tereyağı + 1 tatlı kaşığı sızma zeytinyağında kısık ateşte, kapağı kapalı pişir. Yanına 1 şişe kefir (250 ml), 1 muz ve 25 g çiğ kuruyemiş: 5 bütün ceviz içi YA 20 badem YA 18 fındık; karışık istersen 2 ceviz + 7 badem + 6 fındık.',
+  items:[['yumurta',150],['yulaf',30],['lor',60],['tereyagi',5],['zeytinyagi',5],['kefir',250],['muz',120],['kuruyemis',25]]},
+ haslama:{name:'Haşlama',sub:'3 Yumurta + Yulaf Kasesi',recipe:'<b>Akşam:</b> kavanoz ya da kaseye 70 g yulaf (yaklaşık 7 yemek kaşığı), 150 g süzme yoğurt (500 g kabın üçte biri) ve yaklaşık 100–120 ml su koy (yulaf gece suyu çeker, az olursa katı kalır), karıştır, kapağını kapatıp buzdolabına bırak. Yulaf gece boyunca yumuşar.<br><b>Sabah:</b> 3 yumurtayı kaynar suda 9–10 dk haşla, soğuk suya al. Bu sırada kavanozu aç, 1 muzu dilimle, üstüne 1 tatlı kaşığı bal ve 15 g kuruyemiş ekle: 3 bütün ceviz içi YA 12 badem YA 10 fındık; karışık istersen 1 ceviz + 4 badem + 4 fındık. İstersen tarçın. Hâlâ koyuysa 1–2 yemek kaşığı su ekleyip karıştır. Yumurtaları soyup yanında ye.',
+  items:[['yumurta',150],['yulaf',70],['suzme',150],['muz',120],['bal',10],['kuruyemis',15]]}
+};
+// Kahve & atıştırmalık profilleri
+const SNACK={
+ lifalif:{name:'Lifalif',sub:'Kuruyemişli Bar',recipe:'Kahvenin yanında 1 Lifalif kuruyemişli yulaf bar (35 g), 30 g çiğ kuruyemiş: 6 bütün ceviz içi YA 24 badem YA 21 fındık; karışık istersen 3 ceviz + 12 badem + 10 fındık. Üstüne 20 g bitter çikolata (%80–85): Ülker 4 kare, Tambol 3 kare. Son kahveni 14:30 öncesi iç.',
+  items:[['lifalifk',35],['kuruyemis',30],['bitter',20]]},
+ fellas:{name:'Fellas',sub:'Protein Bar',recipe:'Kahvenin yanında 1 Fellas protein bar (32 g), 30 g çiğ kuruyemiş: 6 bütün ceviz içi YA 24 badem YA 21 fındık; karışık istersen 3 ceviz + 12 badem + 10 fındık. Üstüne 25 g bitter çikolata (%80–85): Ülker 5 kare, Tambol 3 kare. Son kahveni 14:30 öncesi iç. Barın kalorisi tahmini, kutu gelince etiketten güncellenecek.',
+  items:[['fellas',32],['kuruyemis',30],['bitter',25]]}
+};
+// Akşam yemeği profilleri
+const DINNER={
+ ton:{grp:'evde',name:'Ton Makarna',sub:'1 Kutu Ton + Makarna + Salata',recipe:'120 g kuru makarnayı (haşlanmış yaklaşık 300 g) haşla. 1 kutu tonu süz, bir kez suyla durula (tuz düşer). Makarna, ton ve 150 g salatayı karıştır, 10 g zeytinyağı (1 yemek kaşığı) ve limon ekle. Yanında 150 g süzme yoğurt ye. Ton değerleri Migros iri parçalı etiketine göre, süzme ağırlığı 104 g (etikette yazan).',
+  items:[['tonmigros',104],['makarna',300],['salata',150],['zeytinyagi',10],['suzme',150]]},
+ tavuk:{grp:'evde',name:'Tavuk / Hindi',sub:'Göğüs + Pilav ya da Makarna + Yoğurt',recipe:'200 g çiğ tavuk ya da hindi göğsünü 2 cm kalınlığında dilimle. 1 yemek kaşığı yoğurt, 10 g zeytinyağı, tuz, karabiber, kırmızı biber ve kimyonla karıştırıp 15–30 dk beklet. Airfryer\'da 180 °C 12–15 dk (ortada bir kez çevir) ya da tavada kapağı kapalı pişir; ortası pembe kalmasın, suyu berrak olsun. Karbonhidrat için ya pilav: yaklaşık yarım su bardağı (100 g) pirinci pişir (haşlanmış ~300 g); ya da makarna: 120 g kuru makarnayı (yaklaşık 1,5 su bardağı) haşla (haşlanmış ~300 g), tavuğu dilimleyip makarnayla ve yoğurt-sarımsak sosuyla karıştır. İkisi de aynı kalori, makarnada protein yaklaşık 9 g daha fazla. Yanında 150 g yoğurt. İstersen yanına hazır salata ekle (Migros Yemeye Hazır Karışık Kap Salata, 200 g, yaklaşık 40–60 kcal) ya da donmuş sebzeyi mikrodalgada 3–4 dk ısıt; ikisi de saklama derdi çıkarmaz.',
+  items:[['tavukgogus',150],['pilav',300],['zeytinyagi',10],['yogurt',150]]},
+ tadafileto:{grp:'hazir',name:'Tada Fileto + Bulgur',sub:'Tavuk Fileto + Nohutlu Bulgur Pilavı + Süzme Yoğurt (Migros)',recipe:'1 adet Tada Tavuk Fileto (135 g) ile 1 paket Yayla Nohutlu Bulgur Pilavı (250 g) mikrodalgada ısıt, yanına 150 g süzme yoğurt. Tuz yaklaşık 4,7 g, o gün diğer öğünleri tuzsuz tut.',
+  items:[['tadafileto',135],['yaylabulgur',250],['suzme',150]]},
+ bbmgogus:{grp:'hazir',name:'BBM Tavuk Göğsü & Pirinç',sub:'Haşlanmış Tavuk Göğsü & Pirinç Pilavı (Yemeksepeti)',recipe:'Yemeksepeti BBM Food paketi (350 g), mikrodalgada ısıt. Protein zaten yüksek, yanına yoğurt gerekmez.',
+  items:[['bbmgogus',350]]},
+ bbmsis:{grp:'hazir',name:'BBM Tavuk Şiş & Siyez',sub:'Izgara Tavuk Şiş & Siyez Bulguru + Süzme Yoğurt (Yemeksepeti)',recipe:'Yemeksepeti BBM Food paketi (300 g), mikrodalgada ısıt. Yanında 150 g süzme yoğurt.',
+  items:[['bbmsis',300],['suzme',150]]},
+ gpbiryani:{grp:'hazir',name:'Gurmepack Biryani',sub:'Tavuk Biryani + Süzme Yoğurt',recipe:'Paketi mikrodalgada yaklaşık 2,5 dk ısıt (ambalajdaki talimata bak). Yanında 150 g süzme yoğurt.',
+  items:[['gpbiryani',250],['suzme',150]]},
+ gpsis:{grp:'hazir',name:'Gurmepack Şiş Bulgur',sub:'Tavuk Şiş & Bulgur Pilavı + Süzme Yoğurt',recipe:'Paketi mikrodalgada yaklaşık 2,5 dk ısıt (ambalajdaki talimata bak). Yanında 150 g süzme yoğurt. Etikete göre tuz yüksek, gün içinde diğer öğünleri hafif tut.',
+  items:[['gpsis',380],['suzme',150]]},
+ gpbarbeku:{grp:'hazir',name:'Gurmepack Barbekü',sub:'Barbekü Tavuk Fusilli + Süzme Yoğurt',recipe:'Paketi mikrodalgada yaklaşık 2,5 dk ısıt (ambalajdaki talimata bak). Yanında 150 g süzme yoğurt. Sayfadaki kalori değeri tutarsız olduğu için makrolardan hesaplandı.',
+  items:[['gpbarbeku',360],['suzme',150]]},
+ kiymali:{grp:'evde',name:'Kıymalı Makarna',sub:'Kıyma + Makarna + Domates Sosu + Yoğurt',recipe:'120 g kuru makarnayı (yaklaşık 1,5 su bardağı) paket süresince haşla, süz. Tavaya yağ koymadan 150 g dana kıymayı ekle, kaşıkla ezerek suyunu çekip rengi dönene kadar 5–7 dk kavur; tuz, karabiber ekle. 125 g hazır domates sosunu (Heinz Napoletana) ekle, 5 dk kaynat. Makarnanın üstüne dök, yanında 150 g yoğurt ye. Sosu 3 porsiyona bölüp dondurabilirsin: açılmış kavanoz buzdolabında 4–5 gün dayanır.',
+  items:[['kiyma',150],['makarna',300],['domatessos',125],['yogurt',150]]},
+ antrikot:{grp:'evde',name:'Antrikot',sub:'Antrikot + Patates Püresi + Ayran',recipe:'220 g çiğ antrikotu (2–3 cm kalın dilim) pişirmeden 20 dk önce buzdolabından çıkar. Çok kızgın tavada her yüz 2–3 dk (orta pişmiş) pişir. Tuzu pişirdikten sonra at, 5 dk dinlendir. Püre için 300 g patatesi haşla, 5 g tereyağı ve biraz sıcak su (ya da kefir) ile ez. Yanında 1 büyük bardak (250 ml) ayran; canın isterse ayran yerine şekersiz kola da olur (kalori ve protein düşer). Antrikot yağlı bir kesim, bu yüzden bu profilde salata ve ekstra zeytinyağı yok.',
+  items:[['antrikot',220],['patates',300],['tereyagi',5],['ayran',250]]}
+};
+const EKSTRA_ITEMS=[['muz','Muz','adet',120],['portakal','Mandalina','adet',130],['elma','Elma','adet',180],['fistikezmesi','Fıstık ezmesi','tatlı kaşığı',12],['kuruyemis','Kuruyemiş','küçük avuç',15],['suzme','Yoğurt','kase (süzme)',150]];
+const PROFILES={kahvalti:BREAKFAST,atistirma:SNACK,aksam:DINNER};
+const PLANS={
+ A:{name:'Plan A · Tavuklu gün',items:[
+  ['kahvalti','yumurta',150],['kahvalti','tamekmek',120],['kahvalti','beyazpeynir',30],['kahvalti','zeytin',28],['kahvalti','domates',120],['kahvalti','salatalik',100],['kahvalti','sutyarim',200],['kahvalti','bal',15],
+  ['atistirma','suzme',200],['atistirma','yulaf',60],['atistirma','muz',120],['atistirma','ceviz',10],
+  ['aksam','tavukgogus',150],['aksam','bulgur',350],['aksam','salata',150],['aksam','zeytinyagi',5],['aksam','yogurt',150],['aksam','tamekmek',30],
+  ['ekstra','sutyarim',250],['ekstra','hurma',32],['ekstra','elma',180]]},
+ B:{name:'Plan B · Okul günü',items:[
+  ['kahvalti','menemen',200],['kahvalti','tamekmek',90],['kahvalti','lor',60],['kahvalti','zeytin',28],['kahvalti','kefir',200],
+  ['atistirma','tost',120],['atistirma','ayran',250],['atistirma','muz',120],
+  ['aksam','kurufasulye',300],['aksam','pirinc',250],['aksam','tavukgogus',100],['aksam','yogurt',150],['aksam','salata',150],['aksam','tamekmek',30],
+  ['ekstra','suzme',150],['ekstra','findik',10],['ekstra','portakal',130],['ekstra','hurma',16]]}
+};
+// mode: vucut | tek (tek dambıl) | cift (iki dambıl) | bant | sure
+// kur: plaka kurulumu — '44' = 4+4 (iki dambıl ağır), '22' = 2+2 (iki dambıl hafif), '62' = 6+2 (biri ağır tek, biri hafif)
+const PROGRAM=[
+ {id:'ua',name:'Üst A',focus:'Göğüs · sırt · kol',ex:[
+  {id:'ua1',name:'Şınav',mode:'vucut',sets:4,lo:8,hi:15,rest:90,cue:'Gövde tahta gibi düz, göğüs yere iki parmak kalana kadar in. 15 tekrarı geçince ayaklarını sandalyeye al; o da kolaylaşınca 3 sn iniş tempoyla yap.'},
+  {id:'ua2',name:'Dambıl floor press',mode:'cift',kur:'44',sets:3,lo:10,hi:15,rest:90,cue:'Matta sırt üstü, dizler bükülü. Dirsekler gövdeyle 45°; kol yere değince 1 sn bekle, sonra it.'},
+  {id:'ua3',name:'Tek kol dambıl row',mode:'tek',kur:'44',sets:4,lo:8,hi:12,rest:75,each:true,cue:'Diz ve el koltukta, sırt düz. Dirseği kalçana doğru çek, tepede kürek kemiğini 1 sn sık. Tüm setlerde 12 olunca 6+2 kurulumla ağır dambıla geç.'},
+  {id:'ua4',name:'Oturarak bant row',mode:'bant',sets:3,lo:12,hi:15,rest:60,cue:'Bandı çift kat yapıp ayak tabanlarına geçir, bacaklar düz otur. Elleri karnına çek, 2 sn sık. Bant zorlamıyorsa tek kat ve daha kısa tut.'},
+  {id:'ua5',name:'Yana omuz açış',mode:'cift',kur:'22',sets:3,lo:12,hi:20,rest:60,cue:'Hafif öne eğil, dirsekler hafif kırık. Omuz hizasında dur, 2–3 sn sürede indir. Ağırlığı sallayarak kaldırma.'},
+  {id:'ua6',name:'Dambıl curl',mode:'cift',kur:'22',sets:3,lo:10,hi:15,rest:15,ss:true,cue:'Süperset: bitirince dinlenmeden triceps hareketine geç. Dirsekler gövdenin yanında sabit.'},
+  {id:'ua7',name:'Baş üstü triceps extension',mode:'cift',kur:'22',sets:3,lo:10,hi:15,rest:60,cue:'İki dambıl, avuçlar birbirine bakar. Dirsekler öne bakar ve açılmaz; dambılları başının arkasına indir.'}]},
+ {id:'la',name:'Alt A',focus:'Ön bacak · kalça · core',ex:[
+  {id:'la1',name:'Goblet squat',mode:'tek',kur:'62',sets:4,lo:8,hi:12,rest:90,cue:'Ağır dambılı göğsünde dik tut. 3 sn\'de in, dipte 1 sn bekle, kalkarken dizler dışa.'},
+  {id:'la2',name:'Bulgarian split squat',mode:'tek',kur:'62',sets:3,lo:8,hi:12,rest:75,each:true,cue:'Arka ayak koltukta. Dambılı göğsünde tut: önce hafif olanla başla, tüm setlerde 12 olunca ağıra geç. Ön diz ayak parmaklarıyla aynı yöne baksın.'},
+  {id:'la3',name:'Romanian deadlift',mode:'cift',kur:'44',sets:4,lo:10,hi:15,rest:90,cue:'Dizler hafif kırık, kalçayı geriye it, sırt düz. Dambıllar bacağına sürtünerek diz altına iner; arka bacak gerilince dön.'},
+  {id:'la4',name:'Hip thrust',mode:'cift',kur:'44',sets:3,lo:12,hi:20,rest:60,cue:'Sırtın koltuk kenarında, iki dambıl kalça kemiğinin üstünde (havluyla). Tepede 2 sn sık.'},
+  {id:'la5',name:'Tek bacak baldır kaldırma',mode:'tek',kur:'44',sets:3,lo:12,hi:20,rest:45,each:true,cue:'Basamak ya da kitap kenarında. Tam aşağı, tam yukarı; tepede 1 sn bekle.'},
+  {id:'la6',name:'Plank',mode:'sure',sets:3,lo:30,hi:60,rest:45,cue:'Kalça düşmesin, karın ve kalçayı sık. 60 sn kolaylaşınca bir ayağını kaldır.'}]},
+ {id:'ub',name:'Üst B',focus:'Omuz · sırt · kol',ex:[
+  {id:'ub1',name:'Eğilerek dambıl row',mode:'cift',kur:'44',sets:4,lo:8,hi:12,rest:90,cue:'Gövde 45° öne, sırt düz, diz hafif kırık. Dambılları göbeğe doğru çek, kürek kemiklerini sık.'},
+  {id:'ub2',name:'Oturarak omuz press',mode:'cift',kur:'44',sets:4,lo:8,hi:12,rest:90,cue:'Sırtın desteklenmiş otur. Dambılları kulak hizasından yukarı it, belini kavisleme. 8 tekrar yapamıyorsan bu hafta 2+2 ile yap.'},
+  {id:'ub3',name:'Tempo şınav',mode:'vucut',sets:3,lo:8,hi:12,rest:75,cue:'3 sn iniş, dipte 1 sn bekle, güçlü kalk. Kolaylaşınca ayaklar yükseltilmiş.'},
+  {id:'ub4',name:'Baş üstü bant pulldown',mode:'bant',sets:3,lo:12,hi:15,rest:60,cue:'Loop bandı iki elle baş üstünde gergin tut. Bandı yanlara açarak göğsüne indir, dirsekler kaburgalara. Kanat kaslarını sık.'},
+  {id:'ub5',name:'Hammer curl',mode:'cift',kur:'22',sets:3,lo:10,hi:15,rest:15,ss:true,cue:'Süperset: bitirince dinlenmeden face pull\'a geç. Avuçlar birbirine bakar, dirsekler sabit.'},
+  {id:'ub6',name:'Oturarak bant face pull',mode:'bant',sets:3,lo:15,hi:20,rest:60,cue:'Bant ayak tabanlarında, bacaklar düz. Bandı alnına doğru çekerken dirsekleri yana-yukarı aç, 2 sn sık. Duruşun için en önemli hareket.'},
+  {id:'ub7',name:'Sandalye dips',mode:'vucut',sets:3,lo:8,hi:15,rest:60,cue:'Eller sağlam bir sandalyede, dirsekler geriye bakar. Omuz ağrırsa yerine iki dambılla baş üstü triceps extension yap.'}]},
+ {id:'lb',name:'Alt B',focus:'Arka bacak · kalça · core',ex:[
+  {id:'lb1',name:'Sumo goblet squat',mode:'tek',kur:'62',sets:4,lo:10,hi:15,rest:90,cue:'Ayaklar geniş, parmaklar dışa. Ağır dambıl iki bacağın arasında sarkar; dik in, dik kalk.'},
+  {id:'lb2',name:'Geri lunge',mode:'cift',kur:'44',sets:3,lo:8,hi:12,rest:75,each:true,cue:'Geriye büyük adım, arka diz yere yaklaşsın. Ön topukla iterek dön.'},
+  {id:'lb3',name:'Tek bacak RDL',mode:'tek',kur:'44',sets:3,lo:8,hi:12,rest:60,each:true,cue:'Dambıl çalışan bacağın karşı elinde. Kalçayı geriye it, kalça hizan yere paralel kalsın. Denge için ilk haftalarda duvara dokun.'},
+  {id:'lb4',name:'Havlu ile leg curl',mode:'vucut',sets:3,lo:8,hi:12,rest:60,cue:'Sırt üstü, topuklar kaygan zeminde havlunun üstünde. Kalça havadayken topukları kendine çek, yavaş geri it.'},
+  {id:'lb5',name:'Tek bacak kalça köprüsü',mode:'vucut',sets:3,lo:10,hi:15,rest:45,each:true,cue:'Matta sırt üstü, bir ayak yerde. Topuktan it, tepede 2 sn sık. Kolaylaşınca hafif dambılı kalçana koy.'},
+  {id:'lb6',name:'Dead bug',mode:'vucut',sets:3,lo:10,hi:12,rest:45,each:true,cue:'Bel mata yapışık. Karşı kol ve bacağı yavaşça uzat, nefesi ver.'}]}
+];
+const DOW_PLAN={1:'ua',3:'la',4:'ub',6:'lb'};
+const KUR={'44':{lab:'4+4',w:h=>`2 × ${fmtMax(h+10,1)} kg`},'22':{lab:'2+2',w:h=>`2 × ${fmtMax(h+5,1)} kg`},'62':{lab:'6+2',w:h=>`${fmtMax(h+15,1)} kg + ${fmtMax(h+5,1)} kg`}};
+const PHASES={pre:{name:'Başlangıç öncesi',note:'Program 26 Ekim Pazartesi başlıyor. Bu hafta istersen bir antrenmanı deneme olarak yap; hareketleri öğren.'},
+ alisma:{name:'Alışma',note:'Her harekette 1 set eksik. Setleri tükenmeye 3 tekrar kala bitir, formu öğren.'},
+ yuk1:{name:'Yüklenme 1',note:'Tüm setler. Tükenmeye 1–2 tekrar kala bitir; tüm setlerde üst sınıra ulaşınca zorlaştır.'},
+ deload:{name:'Hafif hafta',note:'Setler yarıya iner, ağırlık aynı kalır. Vücut toparlanır; hafta sonunda bel ölçüsü ve fotoğraf al.'},
+ yuk2:{name:'Yüklenme 2',note:'İlk iki harekete istersen 5. seti ekle. Ağırlık bitince tempo ve zor varyasyonlarla ilerle.'}};
+const SUPS=[['d3k2','D3K2 damla','kahvaltı'],['omega','Omega 3','kahvaltı · 1 softjel'],['b12','Methyl B12 sprey','kahvaltı · 1 puf'],['mag','Magnezyum','yatmadan 3 sa. önce · 1 tablet']];
+const MODE_LABEL={vucut:'Vücut ağırlığı',tek:'Tek dambıl',cift:'İki dambıl',bant:'Loop bant',sure:'Süre'};
+const DEFAULTS={weight:69.5,height:175,birth:'2005-10-14',act:'otur',days:4,surplus:150,ppk:1.8,fatPct:28,adjust:0,lastAdjust:null,handle:0.5,programStart:'2026-10-26',d3Start:'2026-09-25',d3Drops:7,customFoods:[]};
+
+/* ===================== HELPERS ===================== */
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseYmd=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parseYmd(s);d.setDate(d.getDate()+n);return ymd(d)};
+const todayStr=()=>ymd(new Date());
+const diffDays=(a,b)=>Math.round((parseYmd(b)-parseYmd(a))/864e5);
+const MON=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+const DOW=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+const DOWL=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const dLabel=s=>{const d=parseYmd(s);return `${d.getDate()} ${MON[d.getMonth()]}`};
+const fmt=(n,dec=0)=>Number(n||0).toLocaleString('tr-TR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+const fmtMax=(n,dec=1)=>Number(n||0).toLocaleString('tr-TR',{maximumFractionDigits:dec});
+const num=v=>{const x=parseFloat(String(v??'').trim().replace(',','.'));return isFinite(x)?x:NaN};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s).toLocaleLowerCase('tr').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ı/g,'i');
+const uid=()=>Math.random().toString(36).slice(2,10);
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+/* ===================== STATE & STORAGE ===================== */
+const S={settings:clone(DEFAULTS),days:{},weights:{},workouts:{},
+  ui:{tab:'today',date:todayStr(),wDay:null,sheet:null,confirmClear:false,weightDraft:''}};
+let db=null, mode='local', loaded={settings:false,days:false,weights:false,workouts:false};
+const LS='hacim-defteri-v1';
+function lsGet(){try{return JSON.parse(localStorage.getItem(LS)||'null')}catch(e){return null}}
+function lsSet(){try{window.nutChanged&&window.nutChanged();localStorage.setItem(LS,JSON.stringify({settings:S.settings,days:S.days,weights:S.weights,workouts:S.workouts,tab:S.ui.tab}))}catch(e){}}
+const SEED={"settings":{"act":"otur","adjust":0,"birth":"2005-10-14","customFoods":[],"days":4,"fatPct":28,"handle":0.5,"height":175,"lastAdjust":null,"ppk":1.8,"programStart":"2026-10-26","surplus":150,"weight":69.5},"days":{"2026-10-15":{"entries":[],"water":0},"2026-10-16":{"entries":[],"sup":{"b12":false,"d3k2":false,"omega":false},"water":0},"2026-10-17":{"entries":[{"c":1,"f":14.3,"fib":0,"food":"yumurta","g":150,"id":"kyj57ehj","kcal":215,"meal":"kahvalti","name":"Yumurta","p":18.9,"pg":50,"pn":"adet","prof":"haslama"},{"c":47.4,"f":4.6,"fib":7,"food":"yulaf","g":70,"id":"y12bx4rc","kcal":265,"meal":"kahvalti","name":"Yulaf ezmesi","p":9.2,"pg":10,"pn":"yemek kaşığı","prof":"haslama"},{"c":6,"f":7.5,"fib":0,"food":"suzme","g":150,"id":"ap75kesm","kcal":146,"meal":"kahvalti","name":"Süzme yoğurt","p":13.5,"pg":200,"pn":"kase","prof":"haslama"},{"c":27.4,"f":0.4,"fib":3.1,"food":"muz","g":120,"id":"gpovfdcm","kcal":107,"meal":"kahvalti","name":"Muz","p":1.3,"pg":120,"pn":"orta boy","prof":"haslama"},{"c":8.2,"f":0,"fib":0,"food":"bal","g":10,"id":"q7lbezpl","kcal":30,"meal":"kahvalti","name":"Bal","p":0,"pg":7,"pn":"tatlı kaşığı","prof":"haslama"},{"c":2.6,"f":8.8,"fib":1.4,"food":"kuruyemis","g":15,"id":"usc1h8w6","kcal":93,"meal":"kahvalti","name":"Çiğ kuruyemiş (ceviz / badem / fındık)","p":2.6,"pg":15,"pn":"avuç","prof":"haslama"},{"c":13.1,"f":5.1,"fib":3.8,"food":"fellas","g":32,"id":"ldt7v4hq","kcal":130,"meal":"atistirma","name":"Fellas protein bar (kalori tahmini)","p":8,"pg":32,"pn":"bar","prof":"fellas"},{"c":5.2,"f":17.6,"fib":2.9,"food":"kuruyemis","g":30,"id":"jl7ai5qk","kcal":186,"meal":"atistirma","name":"Çiğ kuruyemiş (ceviz / badem / fındık)","p":5.1,"pg":15,"pn":"avuç","prof":"fellas"},{"c":7,"f":11.8,"fib":3,"food":"bitter","g":25,"id":"xwqzh6xe","kcal":148,"meal":"atistirma","name":"Bitter çikolata (%80–85)","p":2.5,"pg":8,"pn":"kare","prof":"fellas"},{"c":1.7,"f":10.9,"fib":0,"food":"tonmigros","g":104,"id":"5awyp0hh","kcal":199,"meal":"aksam","name":"Ton balığı (Migros iri parçalı, süzülmüş)","p":23.4,"pg":104,"pn":"kutu","prof":"ton"},{"c":93,"f":2.7,"fib":5.4,"food":"makarna","g":300,"id":"ycvulwap","kcal":474,"meal":"aksam","name":"Makarna (haşlanmış)","p":17.4,"pg":200,"pn":"tabak","prof":"ton"},{"c":5.3,"f":0.3,"fib":3,"food":"salata","g":150,"id":"p0qgssac","kcal":30,"meal":"aksam","name":"Karışık salata (sossuz)","p":2,"pg":150,"pn":"kase","prof":"ton"},{"c":0,"f":10,"fib":0,"food":"zeytinyagi","g":10,"id":"5a76nb1m","kcal":88,"meal":"aksam","name":"Sızma zeytinyağı","p":0,"pg":10,"pn":"yemek kaşığı","prof":"ton"},{"c":6,"f":7.5,"fib":0,"food":"suzme","g":150,"id":"c5k9yvhs","kcal":146,"meal":"aksam","name":"Süzme yoğurt","p":13.5,"pg":200,"pn":"kase","prof":"ton"},{"c":5.7,"f":0,"fib":0,"food":"bal","g":7,"id":"y2o0chwi","kcal":21,"meal":"ekstra","name":"Bal","p":0,"pg":7,"pn":"tatlı kaşığı"},{"c":27.4,"f":0.4,"fib":3.1,"food":"muz","g":120,"id":"dh20subv","kcal":107,"meal":"ekstra","name":"Muz","p":1.3,"pg":120,"pn":"orta boy"}],"sup":{"b12":true,"d3k2":true,"omega":true},"water":0}},"weights":{},"workouts":{"2026-10-16_ua":{"date":"2026-10-16","dayId":"ua","finishedAt":null,"sets":{"ua1":[{"done":false,"kg":"","reps":"8"},{"done":false,"kg":"","reps":""},{"done":false,"kg":"","reps":""},{"done":false,"kg":"","reps":""}]}}}};
+(function boot(){let l=lsGet();if(!l&&SEED){l=SEED;try{localStorage.setItem(LS,JSON.stringify(SEED))}catch(e){}}if(l){S.settings={...clone(DEFAULTS),...(l.settings||{})};S.days=l.days||{};S.weights=l.weights||{};S.workouts=l.workouts||{};if(l.tab)S.ui.tab=l.tab}})();
+
+const pending=new Set(), writing={}, again={}, timers={};
+function save(path,delay=450){
+  pending.add(path);lsSet();
+  clearTimeout(timers[path]);timers[path]=setTimeout(()=>flush(path),delay);
+}
+function docData(path){
+  const [col,id]=path.split('/');
+  if(col==='config')return S.settings;
+  const src={days:S.days,weights:S.weights,workouts:S.workouts}[col];
+  return src&&src[id]!==undefined?src[id]:null;
+}
+async function flush(path){
+  if(mode!=='db'){pending.delete(path);return}
+  if(writing[path]){again[path]=true;return}
+  writing[path]=true;
+  try{
+    const data=docData(path);
+    if(data===null) await db.doc(path).delete(); else await db.doc(path).set(clone(data));
+  }catch(e){
+    if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,800+Math.random()*800));again[path]=true}
+    else toast(e&&e.code==='quota_exceeded'?'Depolama sınırı doldu: eski kayıtları silmen gerekiyor.':'Kaydedilemedi. Bağlantını kontrol edip tekrar dene.');
+  }
+  writing[path]=false;
+  if(again[path]){again[path]=false;return flush(path)}
+  pending.delete(path);
+}
+function mergeCol(col,snap){
+  const next={};
+  snap.docs.forEach(d=>{next[d.id]=d.data()});
+  const cur=S[col];
+  Object.keys(cur).forEach(id=>{if(pending.has(col+'/'+id))next[id]=cur[id]});
+  for(const id of Object.keys(next)){if(pending.has(col+'/'+id))next[id]=cur[id];}
+  Object.keys(next).forEach(id=>{if(next[id]===undefined)delete next[id]});
+  const changed=JSON.stringify(next)!==JSON.stringify(cur);
+  S[col]=clone(next);loaded[col]=true;
+  if(changed){lsSet();render()}
+  updateStatus();
+}
+async function initStore(){
+  render();
+  if(!db){mode='local';updateStatus();render();return}
+  mode='db';updateStatus();
+  const onErr=e=>{mode='local';updateStatus();toast('Bulut bağlantısı kesildi; değişiklikler bu cihazda tutuluyor.')};
+  db.doc('config/settings').onSnapshot(s=>{
+    if(pending.has('config/settings'))return;
+    const next=s.exists?{...clone(DEFAULTS),...s.data()}:S.settings;
+    loaded.settings=true;
+    if(JSON.stringify(next)!==JSON.stringify(S.settings)){S.settings=clone(next);lsSet();render()}
+    updateStatus();
+  },onErr);
+  ['days','weights','workouts'].forEach(col=>db.collection(col).onSnapshot(q=>mergeCol(col,q),onErr));
+}
+function updateStatus(){
+  const el=$('#status');if(!el)return;
+  el.textContent=mode==='db'?'Hesabına kaydediliyor':'Bu telefonda kaydediliyor';
+}
+
+/* ===================== CALCULATIONS ===================== */
+function ageOn(birth,today){const b=parseYmd(birth),t=parseYmd(today);let a=t.getFullYear()-b.getFullYear();if(t.getMonth()<b.getMonth()||(t.getMonth()===b.getMonth()&&t.getDate()<b.getDate()))a--;return a}
+function sortedWeights(){return Object.keys(S.weights).filter(k=>S.weights[k]&&isFinite(S.weights[k].kg)).sort()}
+function currentWeight(){const ks=sortedWeights();if(!ks.length)return S.settings.weight;const last=ks[ks.length-1];const win=ks.filter(k=>diffDays(k,last)<7);return win.reduce((s,k)=>s+S.weights[k].kg,0)/win.length}
+function targets(){
+  const s=S.settings,w=currentWeight(),a=ageOn(s.birth||DEFAULTS.birth,todayStr());
+  const bmr=10*w+6.25*s.height-5*a+5;
+  const fac=({otur:1.2,orta:1.35,hareketli:1.5}[s.act]||1.2)+0.045*s.days;
+  const tdee=bmr*fac;
+  const kcal=Math.round((tdee+Number(s.surplus)+Number(s.adjust||0))/50)*50;
+  const p=Math.round(w*s.ppk/5)*5;
+  const f=Math.round(kcal*s.fatPct/100/9/5)*5;
+  const c=Math.max(0,Math.round((kcal-p*4-f*9)/4/5)*5);
+  const fib=Math.max(30,Math.round(kcal/1000*14));
+  return {w,a,bmr,fac,tdee,kcal,p,c,f,fib};
+}
+function allFoods(){return FOODS.concat((S.settings.customFoods||[]).map(f=>({...f,cat:'ozel'})))}
+function foodById(id){return allFoods().find(f=>f.id===id)}
+function macrosFor(food,g){const r=g/100;return{kcal:food.kcal*r,p:food.p*r,c:food.c*r,f:food.f*r,fib:(food.fib||0)*r}}
+function mealTarget(T,k){const sp=SPLIT[k];return{kcal:Math.round(T.kcal*sp.k/50)*50,p:Math.round(T.p*sp.p/5)*5}}
+function getDay(d){return S.days[d]||{entries:[],water:0,sup:{}}}
+function ensureDay(d){if(!S.days[d])S.days[d]={entries:[],water:0,sup:{}};if(!S.days[d].entries)S.days[d].entries=[];if(!S.days[d].sup)S.days[d].sup={};return S.days[d]}
+function sumEntries(es){return (es||[]).reduce((t,e)=>{t.kcal+=e.kcal||0;t.p+=e.p||0;t.c+=e.c||0;t.f+=e.f||0;t.fib+=e.fib||0;return t},{kcal:0,p:0,c:0,f:0,fib:0})}
+function makeEntry(meal,food,g){const m=macrosFor(food,g);return{id:uid(),meal,food:food.id,name:food.name,g:Math.round(g*10)/10,pn:food.pn||null,pg:food.pg||null,kcal:Math.round(m.kcal),p:Math.round(m.p*10)/10,c:Math.round(m.c*10)/10,f:Math.round(m.f*10)/10,fib:Math.round(m.fib*10)/10}}
+function amountLabel(e){
+  if(e.manual)return 'Elle girildi';
+  if(e.pg){const k=e.g/e.pg;if(Math.abs(k*2-Math.round(k*2))<0.02&&k>0)return `${fmtMax(Math.round(k*2)/2,1)} ${e.pn} · ${fmtMax(e.g,0)} g`}
+  return `${fmtMax(e.g,0)} g`;
+}
+function trend(){
+  const ks=sortedWeights();if(!ks.length)return null;
+  const last=ks[ks.length-1];
+  const a=ks.filter(k=>diffDays(k,last)<7),b=ks.filter(k=>{const d=diffDays(k,last);return d>=7&&d<14});
+  const avg=arr=>arr.reduce((s,k)=>s+S.weights[k].kg,0)/arr.length;
+  const r={last,cur:avg(a),first:ks[0],firstKg:S.weights[ks[0]].kg,count:ks.length};
+  if(a.length>=3&&b.length>=3)r.rate=r.cur-avg(b);
+  return r;
+}
+function advice(t){
+  if(!t||t.rate==null)return{kind:'wait',c:'var(--muted)',text:'Haftalık hızı hesaplamak için iki hafta boyunca haftada en az 3 kez tartıl: sabah, tuvaletten sonra, aç karnına.'};
+  const r=t.rate,since=S.settings.lastAdjust?diffDays(S.settings.lastAdjust,todayStr()):99;
+  if(r<0.1)return{kind:'up',delta:150,c:'var(--warn)',locked:since<14,text:`Son iki haftada haftalık değişim ${fmt(r,2)} kg. Hedefin (0,15–0,35 kg) altında: günlük hedefe 150 kcal ekle.`};
+  if(r>0.45)return{kind:'down',delta:-150,c:'var(--warn)',locked:since<14,text:`Son iki haftada haftalık değişim ${fmt(r,2)} kg. Bu hızda yağ da artar: günlük hedeften 150 kcal çıkar.`};
+  return{kind:'ok',c:'var(--ok)',text:`Son iki haftada haftalık değişim ${fmt(r,2)} kg. Hedef aralıktasın, aynen devam.`};
+}
+// workouts
+const sessionId=(date,dayId)=>`${date}_${dayId}`;
+function sessionsSorted(){return Object.entries(S.workouts).filter(([,w])=>w&&w.date).map(([id,w])=>({id,...w})).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0)}
+function hasWork(w){return w&&w.sets&&Object.values(w.sets).some(a=>(a||[]).some(s=>s&&s.done))}
+function lastSession(dayId,before){return sessionsSorted().find(w=>w.dayId===dayId&&w.date<before&&hasWork(w))}
+function defaultDay(date){
+  const ex=PROGRAM.find(p=>S.workouts[sessionId(date,p.id)]);if(ex)return ex.id;
+  const dow=parseYmd(date).getDay();if(DOW_PLAN[dow])return DOW_PLAN[dow];
+  const last=sessionsSorted().find(w=>hasWork(w)&&w.date<=date);
+  if(last){const i=PROGRAM.findIndex(p=>p.id===last.dayId);return PROGRAM[(i+1)%PROGRAM.length].id}
+  return 'ua';
+}
+function weightChips(m){const h=Number(S.settings.handle)||0;if(m==='cift')return[h,h+5,h+10];if(m==='tek')return[h+5,h+10,h+15,h+20];return[]}
+function phase(date){
+  const st=S.settings.programStart||DEFAULTS.programStart,d=diffDays(st,date);
+  if(d<0)return{key:'pre',week:0,cw:0,...PHASES.pre};
+  const w=Math.floor(d/7)+1,cw=((w-1)%12)+1;
+  const key=cw<=2?'alisma':cw<=6?'yuk1':cw===7?'deload':cw<=11?'yuk2':'deload';
+  const p={key,week:w,cw,...PHASES[key]};
+  if(cw===12)p.name='Hafif hafta + ölçüm';
+  return p;
+}
+function setsFor(ex,ph){if(ph.key==='alisma'||ph.key==='pre')return Math.max(2,ex.sets-1);if(ph.key==='deload')return Math.max(2,Math.ceil(ex.sets/2));return ex.sets}
+/* ===================== RENDER ===================== */
+const ICON={
+ today:'<svg viewBox="0 0 24 24"><path d="M7 3v7a2 2 0 0 0 2 2v9M11 3v7a2 2 0 0 1-2 2M17 21V3c-2 1.5-3 4-3 7s1 4 3 4"/></svg>',
+ train:'<svg viewBox="0 0 24 24"><path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/></svg>',
+ progress:'<svg viewBox="0 0 24 24"><path d="M3 20h18M5 16l4-5 4 3 6-8"/></svg>',
+ guide:'<svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4zM5 17a3 3 0 0 1 3-3h11"/></svg>',
+ settings:'<svg viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+ prev:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+ next:'<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
+ check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
+const NUT_TABS={food:'today',prog:'progress',nset:'settings',nguide:'guide'};
+const TABS=[['today','Beslenme'],['train','Antrenman'],['progress','İlerleme'],['guide','Rehber'],['settings','Ayarlar']];
+
+function render(){
+  const a=document.activeElement,fid=a&&a.id&&a.closest&&a.closest('#main')?a.id:null;let ss=null,se=null;
+  try{ss=a.selectionStart;se=a.selectionEnd}catch(e){}
+  if(!NUT_TABS[st.tab])return;S.ui.tab=NUT_TABS[st.tab];
+  const m=document.getElementById('view');
+  m.innerHTML='<div class="nut">'+(({today:renderToday,progress:renderProgress,guide:renderGuide,settings:renderSettings}[S.ui.tab]||renderToday)())+'</div>';
+  if(fid){const n=document.getElementById(fid);if(n){n.focus({preventScroll:true});try{if(ss!=null)n.setSelectionRange(ss,se)}catch(e){}}}
+}
+function dayLogged(x){return (getDay(x).entries||[]).length>0||PROGRAM.some(p=>hasWork(S.workouts[sessionId(x,p.id)]))}
+function dateBar(){
+  const d=S.ui.date,t=todayStr(),dd=parseYmd(d),mon=addDays(d,-((dd.getDay()+6)%7)),T=targets();
+  const rel=d===t?'Bugün':d===addDays(t,-1)?'Dün':d===addDays(t,1)?'Yarın':'';
+  const R=16,C=2*Math.PI*R;
+  let strip='';
+  for(let i=0;i<7;i++){const x=addDays(mon,i),xd=parseYmd(x),k=sumEntries(getDay(x).entries).kcal,r=T.kcal>0?k/T.kcal:0,cls=r>1.08?' hi':r>=0.9?' ok':'';
+    strip+=`<button type="button" class="dc${x===d?' sel':''}${x===t?' tod':''}" data-act="setDate" data-d="${x}" aria-label="${xd.getDate()} ${MON[xd.getMonth()]} ${DOWL[xd.getDay()]}${k?`, ${fmt(k)} kcal`:''}"${x===d?' aria-current="date"':''}><span class="dw">${DOW[xd.getDay()]}</span><span class="rg"><svg viewBox="0 0 38 38" aria-hidden="true"><circle class="tr" cx="19" cy="19" r="${R}"/>${k>0?`<circle class="pg${cls}" cx="19" cy="19" r="${R}" stroke-dasharray="${(Math.min(1,r)*C).toFixed(1)} ${C.toFixed(1)}"/>`:''}</svg><span class="dn num">${xd.getDate()}</span></span></button>`}
+  return `<div class="dh"><div class="dt">${DOWL[dd.getDay()]}<span class="ds">${dd.getDate()} ${MON[dd.getMonth()]} ${dd.getFullYear()}</span>${rel?`<span class="rel">${rel}</span>`:''}</div>
+   <div class="dctl">${d!==t?`<button type="button" class="pill" data-act="today">Bugün</button>`:''}<button class="iconbtn" type="button" data-act="day" data-n="-7" aria-label="Önceki hafta">${ICON.prev}</button><button class="iconbtn" type="button" data-act="day" data-n="7" aria-label="Sonraki hafta">${ICON.next}</button></div></div>
+  <div class="dstrip">${strip}</div>`;
+}
+function bar(v,t){const pct=t>0?Math.min(100,v/t*100):0;return `<div class="track${v>t*1.08?' over':''}"><i style="width:${pct}%"></i></div>`}
+
+function profilePicker(mk,es){
+  const SET=PROFILES[mk];
+  const cur=es.length&&es.every(e=>e.prof)?es[0].prof:null;
+  const lbl=({kahvalti:'Kahvaltı',atistirma:'Atıştırmalık',aksam:'Akşam yemeği',ekstra:'Meyve & ekstra'})[mk];
+  const row=([id,P])=>{
+    const list=P.items.map(([f,g])=>makeEntry(mk,foodById(f),g)),t=sumEntries(list),open=S.ui.bpOpen===id,on=cur===id;
+    return `<div class="bpr${on?' on':''}">
+     <div class="bph"><button type="button" class="radio" role="radio" aria-checked="${on}" data-act="bprof" data-meal="${mk}" data-id="${id}" aria-label="${P.name} seç"><i></i></button>
+      <button type="button" class="bpt" data-act="bpOpen" data-id="${id}" aria-expanded="${open}"><span><b>${P.name}</b><small>${P.sub}</small></span><span class="bpm num">${fmt(t.kcal)} kcal · ${fmt(t.p)} g P</span><svg class="chev${open?' up':''}" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div>
+     ${open?`<div class="bpd"><ul>${list.map(e=>`<li><span>${esc(e.name)}</span><span class="muted">${esc(amountLabel(e))}</span></li>`).join('')}</ul>
+      <p class="small">${P.recipe}</p><p class="pcf"><i class="p">P</i> ${fmt(t.p)} g · <i class="c">K</i> ${fmt(t.c)} g · <i class="f">Y</i> ${fmt(t.f)} g · lif ${fmt(t.fib)} g</p></div>`:''}
+    </div>`};
+  const ent=Object.entries(SET);
+  if(!ent.some(([,P])=>P.grp))return `<div class="bp" role="radiogroup" aria-label="${lbl} profili">${ent.map(row).join('')}</div>`;
+  const G=[['evde','Evde yapılan','Makarna, tavuk, antrikot'],['hazir','Hazır yemek','Mikrodalgada, sınav haftaları için']];
+  return `<div class="bp" role="radiogroup" aria-label="${lbl} profili">${G.map(([g,n,sd])=>{
+    const items=ent.filter(([,P])=>P.grp===g),open=S.ui.bgrp===g,sel=items.find(([id])=>id===cur);
+    return `<div class="bpg${sel?' has':''}"><button type="button" class="bpgh" data-act="bgrp" data-id="${g}" aria-expanded="${open}"><span><b>${n}</b><small>${sel?'Seçili: '+sel[1].name:sd}</small></span><span class="small muted">${items.length} seçenek</span><svg class="chev${open?' up':''}" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>${open?`<div class="bp" style="margin:8px 0 0">${items.map(row).join('')}</div>`:''}</div>`}).join('')}</div>`;
+}
+function counterGrid(es){
+  return `<div class="cg">${EKSTRA_ITEMS.map(([id,nm,unit,g])=>{
+    const e=es.find(x=>x.food===id&&x.prof==='cnt'),n=e?Math.round(e.g/g):0,f=foodById(id),k=f?Math.round(f.kcal*g/100):0;
+    return `<button type="button" class="cb${n?' on':''}" data-act="cnt" data-id="${id}" aria-label="${nm}: ${n} ${unit}. Dokun: bir artır. Basılı tut: sıfırla."><span class="ct"><b>${nm}</b><small>1 ${unit} · ${k} kcal</small></span><span class="cn num">${n}</span></button>`}).join('')}</div>
+  <p class="small muted" style="margin:6px 0 0">Dokunarak artır, basılı tutarak sıfırla.</p>`;
+}
+function supCard(d){
+  const day=getDay(d),sup=day.sup||{},t=todayStr(),drops=Number(S.settings.d3Drops)||0,st=S.settings.d3Start||DEFAULTS.d3Start;
+  const done=SUPS.filter(([id])=>sup[id]).length;
+  let last7=0;for(let i=0;i<7;i++){const x=getDay(addDays(t,-i));if(x.sup&&x.sup.d3k2)last7++}
+  const wk=Math.floor(diffDays(st,t)/7)+1,retest=addDays(st,84);
+  const dose=`${drops} damla`;
+  return `<div class="card"><div class="between" style="margin-bottom:8px"><h2 class="sec">Takviyeler</h2><span class="small num">${done} / ${SUPS.length}</span></div>
+   <div class="sups">${SUPS.map(([id,l,w])=>`<button type="button" class="sup${sup[id]?' on':''}" role="checkbox" aria-checked="${!!sup[id]}" data-act="sup" data-id="${id}"><span class="chk${sup[id]?' on':''}" aria-hidden="true">${ICON.check}</span><span class="sl"><b>${l}</b><small>${id==='d3k2'?`${w} · ${dose}`:w}</small></span></button>`).join('')}</div></div>`;
+}
+function renderToday(){
+  const d=S.ui.date,day=getDay(d),T=targets(),tot=sumEntries(day.entries);
+  const left=T.kcal-tot.kcal;
+  const macro=(l,c,v,t)=>`<div class="macro" style="--c:var(${c})"><div class="lab">${l}</div><div class="val">${fmt(v)}<span> / ${fmt(t)} g</span></div>${bar(v,t)}</div>`;
+  let h=`<div class="card">${dateBar()}</div>
+  <div class="card">
+    <div class="kcal"><div><div class="big">${fmt(tot.kcal)}<span>/ ${fmt(T.kcal)} kcal</span></div></div>
+    <div class="left"><div class="v" style="color:${left<0?'var(--warn)':'var(--ink)'}">${fmt(Math.abs(left))}</div><div class="l">${left<0?'fazla':'kalan'}</div></div></div>
+    <div style="margin-top:10px">${bar(tot.kcal,T.kcal)}</div>
+    <div class="macros">${macro('Protein','--pro',tot.p,T.p)}${macro('Karb.','--carb',tot.c,T.c)}${macro('Yağ','--fat',tot.f,T.f)}${macro('Lif','--fib',tot.fib,T.fib)}</div>
+    ${(()=>{const L=st.log[d];if(!L||!L.done)return '';const k=L.secs?kcalOf(L.secs):L.kcal;return `<p class="small" style="margin-top:12px">Bugünkü antrenman: <b>~${fmt(k)} kcal</b> yakıldı · ${Math.round((L.dur||0)/60)} dk. Hedef antrenman günlerini zaten içeriyor, ekstra yemene gerek yok.</p>`})()}
+    <p class="small muted" style="margin-top:12px">** Çay, kahve, kefir gibi diğer sıvılar hariç günde 2 litre su içmelisin.</p>
+  </div>
+  ${supCard(d)}`;
+  for(const [mk,ml] of MEALS){
+    const es=(day.entries||[]).filter(e=>mealOf(e)===mk),st=sumEntries(es),mt=mealTarget(T,mk);
+    h+=`<div class="card"><div class="meal-h"><h3>${ml}</h3><span class="sum"><b>${fmt(st.kcal)}</b> / ${fmt(mt.kcal)} kcal · P ${fmt(st.p)}/${mt.p} g</span></div>
+    <div class="mbar">${bar(st.kcal,mt.kcal)}</div>
+    ${PROFILES[mk]?profilePicker(mk,es):mk==='ekstra'?counterGrid(es):(es.length?'':`<p class="small muted" style="margin:8px 0 2px">${MEAL_HINT[mk]}</p>`)}
+    <div class="entries">${es.filter(e=>!e.prof).map(e=>`<div class="entry"><button type="button" class="nm" data-act="edit" data-id="${e.id}"><b>${esc(e.name)}</b><small>${esc(amountLabel(e))}</small>
+      <div class="pcf"><i class="p">P</i> ${fmtMax(e.p)} · <i class="c">K</i> ${fmtMax(e.c)} · <i class="f">Y</i> ${fmtMax(e.f)}</div></button>
+      <span class="kc">${fmt(e.kcal)}</span><button type="button" class="x" data-act="del" data-id="${e.id}" aria-label="${esc(e.name)} sil">×</button></div>`).join('')}</div>
+    <button type="button" class="btn ghost sm" data-act="openAdd" data-meal="${mk}" style="margin-top:8px">+ Profil dışı bir şey</button></div>`;
+  }
+  return h;
+}
+
+function renderTrain(){
+  const d=S.ui.date,t=todayStr(),hd=Number(S.settings.handle)||0;
+  const dayId=S.ui.wDay||defaultDay(d),P=PROGRAM.find(p=>p.id===dayId);
+  const sid=sessionId(d,dayId),sess=S.workouts[sid],ph=phase(d);
+  const dd=parseYmd(d),mon=addDays(d,-((dd.getDay()+6)%7));
+  let wk='';
+  for(let i=0;i<7;i++){const x=addDays(mon,i),dow=parseYmd(x).getDay(),pl=DOW_PLAN[dow];
+    const doneP=PROGRAM.find(p=>hasWork(S.workouts[sessionId(x,p.id)]));
+    wk+=`<div class="wd${x===t?' today':''}${doneP?' done':''}${''}"><div class="n">${DOW[dow]}</div><div class="t">${doneP?doneP.name:(pl?PROGRAM.find(p=>p.id===pl).name:'–')}</div></div>`}
+  const doneCount=Array.from({length:7},(_,i)=>addDays(mon,i)).filter(x=>PROGRAM.some(p=>hasWork(S.workouts[sessionId(x,p.id)]))).length;
+  const planned=DOW_PLAN[dd.getDay()];
+  const restDay=!planned&&!sess;
+  let h=`<div class="card">${dateBar()}</div>
+  <div class="phase"><div><span class="pw num">${ph.week?`Hafta ${ph.week}`:'Hafta 0'}</span><b>${ph.name}</b></div><p class="small">${esc(ph.note)}</p></div>
+  <div class="card"><div class="between" style="margin-bottom:10px"><h2 class="sec">Bu hafta</h2><span class="small num">${doneCount} / 4 antrenman</span></div><div class="week">${wk}</div></div>
+  <div class="card"><div class="daypick">${PROGRAM.map(p=>`<button type="button" data-act="wday" data-id="${p.id}" class="${p.id===dayId?'on':''}"><b>${p.name}</b><small>${p.focus}</small></button>`).join('')}</div>
+  ${restDay?`<p class="small muted" style="margin-top:10px">${DOWL[dd.getDay()]} dinlenme günü; 30–45 dk yürümek yeterli. Kaçırdığın bir antrenmanı telafi etmek istersen yukarıdan seç.</p>`:''}</div>
+  <div class="card flat"><h2 class="sec" style="margin-bottom:6px">Isınma · 5 dk</h2><p class="small">Kedi-deve 10 tekrar → bant pull-apart 15 (tek kat) → ${dayId[0]==='u'?'5 yavaş şınav':'15 vücut ağırlığı squat'} → ilk hareketten çok hafif bir set.</p></div>`;
+  const last=lastSession(dayId,d);
+  let curKur=null;
+  P.ex.forEach((ex,idx)=>{
+    if(ex.kur&&ex.kur!==curKur){
+      const k=KUR[ex.kur];
+      h+=`<div class="kur"><span class="plates" aria-hidden="true">${plateIcon(ex.kur)}</span><span><b>${curKur?'Plaka değişimi':'Kurulum'}: ${k.lab}</b> <span class="muted">· ${k.w(hd)}</span></span></div>`;
+      curKur=ex.kur;
+    }
+    const n=setsFor(ex,ph);
+    const arr=(sess&&sess.sets&&sess.sets[ex.id])||[];
+    const larr=(last&&last.sets&&last.sets[ex.id])||[];
+    const ldone=larr.filter(s=>s&&s.done);
+    const unit=ex.mode==='sure'?'sn':'tekrar';
+    let lastTxt='';
+    if(ldone.length){const kgs=[...new Set(ldone.map(s=>s.kg).filter(k=>k!==''&&k!=null))];lastTxt=`Geçen sefer (${dLabel(last.date)}): ${ldone.map(s=>s.reps||'–').join(' · ')} ${unit}${kgs.length?` @ ${kgs.join('/')} kg`:''}`}
+    const topped=ldone.length>=2&&ldone.every(s=>num(s.reps)>=ex.hi);
+    const chips=weightChips(ex.mode);
+    h+=`<div class="card ex${ex.ss?' ss':''}"><div class="ex-h"><div style="min-width:0"><h3><span class="ord">${idx+1}</span>${esc(ex.name)}</h3>
+      <div class="row" style="margin-top:4px"><span class="rx">${n} × ${ex.lo}–${ex.hi} ${unit}${ex.each?' (her taraf)':''}</span><span class="tag">${MODE_LABEL[ex.mode]}</span>${ex.ss?'<span class="tag" style="color:var(--accent);border-color:var(--accent)">Süperset ↓</span>':''}<span class="small muted">${ex.ss?'sonraki harekete geç':`dinlenme ${ex.rest} sn`}</span></div></div></div>
+      <p class="cue">${esc(ex.cue)}</p>
+      ${lastTxt?`<p class="small">${esc(lastTxt)}</p>`:''}
+      ${topped?`<p class="hint">Geçen sefer tüm setlerde üst sınıra ulaştın. Bugün zorlaştır: bir sonraki ağırlığa geç, inişi 3 sn yap ya da daha zor varyasyonu dene.</p>`:''}
+      ${chips.length?`<div class="row"><span class="small muted">${ex.mode==='cift'?'Her dambıl:':'Dambıl:'}</span>${chips.map(c=>`<button type="button" class="chip" data-act="fillkg" data-ex="${ex.id}" data-kg="${c}">${fmtMax(c)} kg</button>`).join('')}</div>`:''}
+      <div class="sets"><div class="sethead"><span>Set</span><span>${ex.mode==='vucut'||ex.mode==='sure'?'Ek yük':ex.mode==='bant'?'Bant':'kg'}</span><span>${unit}</span><span></span></div>
+      ${Array.from({length:n},(_,i)=>{const s=arr[i]||{},ls=larr[i]||{};
+        return `<div class="set"><span class="i">${i+1}</span>
+        <div class="unit"><input class="inp" id="kg-${ex.id}-${i}" inputmode="decimal" autocomplete="off" data-in="set" data-ex="${ex.id}" data-i="${i}" data-k="kg" value="${esc(s.kg??'')}" placeholder="${esc(ls.kg??(ex.mode==='vucut'||ex.mode==='sure'?'–':''))}" aria-label="Set ${i+1} kg"><span>kg</span></div>
+        <div class="unit"><input class="inp" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" data-in="set" data-ex="${ex.id}" data-i="${i}" data-k="reps" value="${esc(s.reps??'')}" placeholder="${esc(ls.reps??ex.lo)}" aria-label="Set ${i+1} ${unit}"><span>${ex.mode==='sure'?'sn':'tk'}</span></div>
+        <button type="button" class="chk${s.done?' on':''}" data-act="done" data-ex="${ex.id}" data-i="${i}" aria-label="Set ${i+1} tamam" aria-pressed="${!!s.done}">${ICON.check}</button></div>`}).join('')}</div></div>`;
+  });
+  const vol=sess?sessionVolume(sess):{v:0,n:0};
+  h+=`<div class="card flat"><h2 class="sec" style="margin-bottom:6px">Soğuma · 2 dk</h2><p class="small">Uzatılmış çocuk pozu 45 sn → koltuk kenarında üst sırt esnetme 45 sn.</p></div>
+  <div class="card flat"><div class="between"><div><h2 class="sec">Seans</h2><p class="small" style="margin-top:4px">${vol.n} set tamam${vol.v?` · toplam yük ${fmt(vol.v)} kg`:''}${sess&&sess.finishedAt?' · bitirildi':''}</p></div>
+   <button class="btn primary" type="button" data-act="finish" ${vol.n?'':'disabled'}>${sess&&sess.finishedAt?'Güncelle':'Antrenmanı bitir'}</button></div></div>`;
+  const hist=sessionsSorted().filter(hasWork).slice(0,8);
+  h+=`<div class="card"><h2 class="sec" style="margin-bottom:8px">Geçmiş</h2>${hist.length?hist.map(w=>{const v=sessionVolume(w),p=PROGRAM.find(x=>x.id===w.dayId);return `<div class="between" style="padding:7px 0;border-top:1px solid var(--line)"><span><b>${p?p.name:''}</b> <span class="muted small">${dLabel(w.date)} ${DOW[parseYmd(w.date).getDay()]}</span></span><span class="small tab-nums">${v.n} set${v.v?` · ${fmt(v.v)} kg`:''}</span></div>`}).join(''):`<p class="empty">Henüz kayıtlı antrenman yok. Bir seti bitirince ✓ işaretle; kayıt otomatik oluşur.</p>`}</div>`;
+  return h;
+}
+function plateIcon(k){const a=Number(k[0]),b=Number(k[1]);const side=n=>'<i></i>'.repeat(n/2);
+  return `<span class="db">${side(a)}<em></em>${side(a)}</span><span class="db">${side(b)}<em></em>${side(b)}</span>`}
+
+function weightChart(){
+  const ks=sortedWeights().filter(k=>diffDays(k,todayStr())<=90);
+  if(ks.length<2)return `<p class="empty">Grafik için en az iki tartı kaydı gerekiyor.</p>`;
+  const W=640,H=240,L=44,R=12,Tp=14,B=28;
+  const x0=ks[0],span=Math.max(1,diffDays(x0,ks[ks.length-1]));
+  const vals=ks.map(k=>S.weights[k].kg);
+  // 7-gün kayan ortalama
+  const ma=ks.map(k=>{const w=ks.filter(j=>{const dd=diffDays(j,k);return dd>=0&&dd<7});return w.reduce((s,j)=>s+S.weights[j].kg,0)/w.length});
+  const first=S.weights[ks[0]].kg;
+  const goal=ks.map(k=>first+0.25*diffDays(x0,k)/7);
+  let lo=Math.min(...vals,...goal),hi=Math.max(...vals,...goal);
+  const step=hi-lo>4?1:0.5;lo=Math.floor((lo-0.2)/step)*step;hi=Math.ceil((hi+0.2)/step)*step;
+  const X=k=>L+(W-L-R)*diffDays(x0,k)/span,Y=v=>Tp+(H-Tp-B)*(1-(v-lo)/(hi-lo));
+  let g='';for(let v=lo;v<=hi+1e-9;v+=step){g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)">${fmt(v,1)}</text>`}
+  const xl=[ks[0],ks[Math.floor(ks.length/2)],ks[ks.length-1]].filter((v,i,a)=>a.indexOf(v)===i);
+  xl.forEach((k,i)=>{g+=`<text x="${X(k)}" y="${H-8}" text-anchor="${i===0?'start':i===xl.length-1?'end':'middle'}" font-size="12" fill="var(--muted)">${dLabel(k)}</text>`});
+  const path=arr=>arr.map((v,i)=>`${i?'L':'M'}${X(ks[i]).toFixed(1)},${Y(v).toFixed(1)}`).join('');
+  const lastK=ks[ks.length-1];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Kilo grafiği">${g}
+   <path d="${path(goal)}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
+   ${vals.map((v,i)=>`<circle cx="${X(ks[i])}" cy="${Y(v)}" r="3" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5"/>`).join('')}
+   <path d="${path(ma)}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+   <circle cx="${X(lastK)}" cy="${Y(ma[ma.length-1])}" r="5" fill="var(--accent)"/></svg>
+   <div class="row small muted" style="margin-top:6px;gap:14px"><span><b style="color:var(--accent)">━</b> 7 günlük ortalama</span><span>○ tartı</span><span>┄ hedef hız (haftada +0,25 kg)</span></div>`;
+}
+function kcalChart(){
+  const T=targets(),t=todayStr(),days=Array.from({length:14},(_,i)=>addDays(t,i-13));
+  const W=640,H=200,L=44,R=8,Tp=10,B=26;
+  const vals=days.map(d=>sumEntries(getDay(d).entries).kcal);
+  const max=Math.max(T.kcal*1.3,...vals),Y=v=>Tp+(H-Tp-B)*(1-v/max),bw=(W-L-R)/14;
+  let g='';[0,1000,2000,3000,4000].filter(v=>v<=max).forEach(v=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)">${fmt(v)}</text>`});
+  days.forEach((d,i)=>{const v=vals[i],x=L+i*bw+bw*0.18,w=bw*0.64;
+    const ok=v>=T.kcal*0.9&&v<=T.kcal*1.1;
+    if(v>0)g+=`<rect x="${x}" y="${Y(v)}" width="${w}" height="${Y(0)-Y(v)}" rx="3" fill="${ok?'var(--accent)':'var(--warn)'}"/>`;
+    else g+=`<rect x="${x}" y="${Y(0)-2}" width="${w}" height="2" fill="var(--line)"/>`;
+    if(i%2===1||i===13)g+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">${parseYmd(d).getDate()}</text>`});
+  g+=`<line x1="${L}" x2="${W-R}" y1="${Y(T.kcal)}" y2="${Y(T.kcal)}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  const logged=vals.filter(v=>v>0),avg=logged.length?logged.reduce((a,b)=>a+b,0)/logged.length:0;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Son 14 gün kalori">${g}</svg>
+   <p class="small muted" style="margin-top:6px">Kesikli çizgi hedef (${fmt(T.kcal)} kcal). Mavi: hedefin ±%10'u içinde. Kayıtlı günlerin ortalaması: <b style="color:var(--ink)">${fmt(avg)}</b> kcal (${logged.length} gün).</p>`;
+}
+function renderProgress(){
+  const t=todayStr(),tr=trend(),ad=advice(tr),T=targets();
+  const todayW=S.weights[t];
+  const ks=sortedWeights().reverse();
+  const wks=ks.filter(k=>isFinite(S.weights[k].waist)).reverse();
+  const waistNow=wks.length?S.weights[wks[wks.length-1]].waist:null,waistFirst=wks.length?S.weights[wks[0]].waist:null;
+  const wkSessions=Object.keys(st.log).filter(d=>st.log[d]&&st.log[d].done&&diffDays(d,t)>=0&&diffDays(d,t)<28).length;
+  let h=`<div class="card"><h2 class="sec" style="margin-bottom:10px">Bugünün ölçümü</h2>
+   <div class="row">
+    <div class="field" style="width:120px"><label for="wInput">Kilo (kg)</label><input class="inp" id="wInput" inputmode="decimal" autocomplete="off" placeholder="${todayW?fmt(todayW.kg,1):'69,6'}" value="${esc(S.ui.weightDraft)}"></div>
+    <div class="field" style="width:120px"><label for="waistInput">Bel (cm)</label><input class="inp" id="waistInput" inputmode="decimal" autocomplete="off" placeholder="${todayW&&isFinite(todayW.waist)?fmt(todayW.waist,1):'isteğe bağlı'}" value="${esc(S.ui.waistDraft||'')}"></div>
+    <button class="btn primary" type="button" data-act="saveW" style="align-self:flex-end">${todayW?'Güncelle':'Kaydet'}</button></div>
+   <p class="small muted" style="margin-top:8px">${todayW?`Bugün: ${fmt(todayW.kg,1)} kg${isFinite(todayW.waist)?` · bel ${fmt(todayW.waist,1)} cm`:''} kaydedildi.`:'Kiloyu sabah, tuvaletten sonra ve bir şey yemeden tart. Beli haftada bir, göbek deliği hizasından, nefes verdikten sonra ölç.'}</p></div>
+  <div class="card"><div class="stats">
+   <div class="stat"><div class="l">Başlangıç</div><div class="v">${tr?fmt(tr.firstKg,1):fmt(S.settings.weight,1)}<span> kg</span></div></div>
+   <div class="stat"><div class="l">Güncel (7g ort.)</div><div class="v">${tr?fmt(tr.cur,1):'–'}<span> kg</span></div></div>
+   <div class="stat"><div class="l">Haftalık hız</div><div class="v">${tr&&tr.rate!=null?(tr.rate>=0?'+':'')+fmt(tr.rate,2):'–'}<span> kg</span></div></div>
+   <div class="stat"><div class="l">Bel</div><div class="v">${waistNow!=null?fmt(waistNow,1):'–'}<span> cm${wks.length>1?` (${waistNow-waistFirst>=0?'+':''}${fmt(waistNow-waistFirst,1)})`:''}</span></div></div></div>
+   <div style="margin-top:14px">${weightChart()}</div>
+   ${tr&&wks.length>1&&(tr.cur-tr.firstKg)>0.5?`<p class="small muted" style="margin-top:8px">Kontrol: kilo +${fmt(tr.cur-tr.firstKg,1)} kg, bel ${waistNow-waistFirst>=0?'+':''}${fmt(waistNow-waistFirst,1)} cm. Her 1 kg için bel 1 cm'den fazla artıyorsa kalori fazlası yüksek gelmiş olabilir.</p>`:''}</div>
+  <div class="advice" style="--c:${ad.c}"><b>Kalori ayarı</b><p class="small">${ad.text}</p>
+   ${(ad.kind==='up'||ad.kind==='down')?(ad.locked?`<p class="small muted">Son ayarlamanın üzerinden 2 hafta geçmedi; etkisini görmek için bekle.</p>`:`<div><button class="btn primary sm" type="button" data-act="applyAdj" data-d="${ad.delta}">${ad.delta>0?'+':''}${ad.delta} kcal uygula (yeni hedef ${fmt(T.kcal+ad.delta)})</button></div>`):''}
+   ${S.settings.adjust?`<p class="small muted">Şu ana kadarki toplam ayar: ${S.settings.adjust>0?'+':''}${S.settings.adjust} kcal.</p>`:''}</div>
+  <div class="card"><h2 class="sec" style="margin-bottom:10px">Son 14 gün kalori</h2>${kcalChart()}</div>
+  <div class="card"><div class="between"><h2 class="sec">Antrenman</h2><span class="small num">son 4 haftada ${wkSessions} / 16 seans</span></div>${bar(wkSessions,16)}</div>
+  <div class="card"><h2 class="sec" style="margin-bottom:6px">Ölçüm kayıtları</h2>${ks.length?`<div class="wlist">${ks.map(k=>`<div class="r"><span>${dLabel(k)} ${parseYmd(k).getFullYear()} <span class="muted small">${DOW[parseYmd(k).getDay()]}</span></span><span class="num" style="font-size:17px">${fmt(S.weights[k].kg,1)} kg${isFinite(S.weights[k].waist)?` <span class="muted" style="font-size:14px">· ${fmt(S.weights[k].waist,1)} cm</span>`:''}</span><button class="x" style="border:0;background:none;color:var(--muted);font-size:18px" type="button" data-act="delW" data-k="${k}" aria-label="${dLabel(k)} kaydını sil">×</button></div>`).join('')}</div>`:`<p class="empty">Henüz ölçüm kaydı yok.</p>`}</div>`;
+  return h;
+}
+
+function renderGuide(){
+  return `<div class="card guide"><h3>Öğün düzenin: 3 öğün + ekstra</h3>
+   <p class="small">Kahvaltı → 2 saat sonra kahve ve atıştırmalık → 2–3 saat sonra akşam yemeği. Arada ya da akşamdan sonra hazırlıksız küçük ekler. Kas kazanmak için öğün sayısı değil, günün toplam kalorisi ve proteini belirleyici; bu düzen yeter.</p>
+   ${(()=>{const T=targets();return `<table class="sched"><tbody>${MEALS.map(([k,l])=>{const mt=mealTarget(T,k);return `<tr><td>${l}</td><td><b class="num" style="font-size:16px">${fmt(mt.kcal)} kcal</b> · ${mt.p} g protein<br><span class="muted small">${MEAL_HINT[k]}</span></td></tr>`}).join('')}</tbody></table>`})()}</div>
+  <div class="card guide"><h3>Az öğünle 2.600 kcal</h3><ul>
+   <li>Kahvaltı ve akşam yemeği 850–900 kcal olmalı; normal porsiyonun yaklaşık 1,5 katı.</li>
+   <li>Sıvı kalori en kolayı: kahvaltıda kefir, akşam ayran.</li>
+   <li>Hacmi az, enerjisi yüksek ekler: zeytinyağı (1 yemek kaşığı 90 kcal), fıstık ezmesi, kuruyemiş, hurma, yulaf.</li>
+   <li>Akşam yemeği ile uyku arasında uzun bir boşluk kalıyorsa yatmadan 1–2 saat önce bir bardak kefir ya da bir kase süzme yoğurt; hazırlık gerektirmez, ekstra hanesine yaz.</li>
+   <li>Kahvenin yanındaki atıştırmalık bisküvi ya da kek olmasın: proteini düşük, şekeri yüksek.</li>
+   <li>Karbonhidratlı öğünlerde önce protein ve sebzeyi ye; kan şekeri daha yavaş yükselir.</li>
+   <li>Lif hedefi günde 30 g üstü: yulaf, bulgur, baklagil, meyve ve sebze.</li>
+   <li>Günde yaklaşık 2 litre su; antrenman günü 2–2,5 litre. İdrar açık sarıysa yeterli.</li></ul></div>
+  <div class="card guide"><h3>Ölçüm</h3><ul>
+   <li>Kilo: haftada en az 3 kez sabah aç karnına. Günlük dalgalanmaya değil 7 günlük ortalamaya bak. Hedef hız haftada 0,15–0,35 kg.</li>
+   <li>Bel: haftada bir, göbek deliği hizasından.</li>
+   <li>Fotoğraf: ayda bir; önden, yandan, arkadan; aynı ışık, aynı saat, aynı mesafe. Aynada fark etmediğin değişimi en iyi bu gösterir.</li></ul></div>
+  <div class="card guide"><h3>Sağlık</h3><ul>
+   <li>Kan tahlili sonuçlarını bir hekimle değerlendir; takviye gerekip gerekmediğine ve dozuna hekim karar versin.</li>
+   <li>Ocak 2027'de (12. hafta civarı) kan değerlerini yeniden ölçtür ve karşılaştır.</li>
+   <li>Eklem ağrısı, baş dönmesi ya da göğüs ağrısı olursa antrenmanı bırak.</li></ul>
+   <p class="small muted">Bu uygulama genel bilgi verir, tıbbi tavsiye yerine geçmez.</p></div>`;
+}
+
+
+
+function renderSettings(){
+  const s=S.settings,T=targets();
+  const sel=(id,opts,v)=>`<select class="inp" id="${id}" data-set="${id.slice(2)}">${opts.map(([k,l])=>`<option value="${k}"${String(v)===String(k)?' selected':''}>${l}</option>`).join('')}</select>`;
+  const inp=(id,v,mode='decimal')=>`<input class="inp" id="${id}" data-set="${id.slice(2)}" inputmode="${mode}" autocomplete="off" value="${esc(v)}">`;
+  const cf=s.customFoods||[];
+  return `<div class="card" style="display:grid;gap:12px"><h3>Hedeflerin</h3>
+   <div class="preview"><div><div class="v">${fmt(T.kcal)}</div><div class="l">kcal</div></div><div><div class="v" style="color:var(--pro)">${T.p}</div><div class="l">protein g</div></div><div><div class="v" style="color:var(--carb)">${T.c}</div><div class="l">karb. g</div></div><div><div class="v" style="color:var(--fat)">${T.f}</div><div class="l">yağ g</div></div></div>
+   <p class="small muted">Bazal metabolizma ${fmt(T.bmr)} kcal (Mifflin-St Jeor, ${T.a} yaş, ${fmt(T.w,1)} kg) × aktivite ${fmt(T.fac,2)} = günlük harcama ~${fmt(T.tdee)} kcal. Üstüne ${s.surplus} kcal fazla${s.adjust?` ve ${s.adjust>0?'+':''}${s.adjust} kcal ayar`:''}. Kilo kaydı girdikçe hesap son 7 günlük ortalamanı kullanır.</p></div>
+  <div class="card" style="display:grid;gap:12px"><h3>Profil</h3>
+   <div class="grid3"><div class="field"><label for="s-weight">Başlangıç kilosu</label>${inp('s-weight',fmtMax(s.weight,1))}</div>
+   <div class="field"><label for="s-height">Boy (cm)</label>${inp('s-height',s.height,'numeric')}</div>
+   <div class="field"><label for="s-birth">Doğum tarihi</label><input class="inp" type="date" id="s-birth" data-set="birth" value="${esc(s.birth)}"></div></div>
+   <div class="grid2"><div class="field"><label for="s-act">Gündelik aktivite</label>${sel('s-act',[['otur','Çoğunlukla oturarak'],['orta','Orta (5–10 bin adım)'],['hareketli','Hareketli (10 bin+)']],s.act)}</div>
+   <div class="field"><label for="s-days">Antrenman günü / hafta</label>${sel('s-days',[[3,'3 gün'],[4,'4 gün'],[5,'5 gün']],s.days)}</div></div>
+   <div class="grid3"><div class="field"><label for="s-surplus">Kalori fazlası</label>${sel('s-surplus',[[150,'+150 (çok yavaş)'],[250,'+250 (temiz bulk)'],[350,'+350'],[500,'+500 (hızlı)']],s.surplus)}</div>
+   <div class="field"><label for="s-ppk">Protein / kg</label>${sel('s-ppk',[[1.6,'1,6 g'],[1.8,'1,8 g'],[2,'2,0 g'],[2.2,'2,2 g']],s.ppk)}</div>
+   <div class="field"><label for="s-fatPct">Yağ oranı</label>${sel('s-fatPct',[[25,'%25'],[28,'%28'],[30,'%30'],[35,'%35']],s.fatPct)}</div></div>
+   <div class="grid2"><div class="field"><label for="s-d3Drops">D3K2 damla sayısı / gün</label>${inp('s-d3Drops',s.d3Drops,'numeric')}</div>
+   <div class="field"><label for="s-d3Start">D vitamini başlangıç tarihi</label><input class="inp" type="date" id="s-d3Start" data-set="d3Start" value="${esc(s.d3Start||DEFAULTS.d3Start)}"></div></div>
+   <div class="field"><label for="s-adjust">Elle kalori ayarı</label>${inp('s-adjust',s.adjust||0,'numeric')}</div></div>
+  <div class="card" style="display:grid;gap:12px"><h3>Kendi yiyeceğin</h3>
+   <p class="small muted">Ambalajdaki 100 g değerlerini gir. Eklediklerin arama listesinde "Benim" altında çıkar.</p>
+   <div class="field"><label for="cf-name">Ad</label><input class="inp" id="cf-name" autocomplete="off" placeholder="ör. Proteinli yoğurt"></div>
+   <div class="grid4"><div class="field"><label for="cf-kcal">kcal</label><input class="inp" id="cf-kcal" inputmode="decimal"></div><div class="field"><label for="cf-p">Protein</label><input class="inp" id="cf-p" inputmode="decimal"></div><div class="field"><label for="cf-c">Karb.</label><input class="inp" id="cf-c" inputmode="decimal"></div><div class="field"><label for="cf-f">Yağ</label><input class="inp" id="cf-f" inputmode="decimal"></div></div>
+   <div class="grid3"><div class="field"><label for="cf-fib">Lif</label><input class="inp" id="cf-fib" inputmode="decimal" placeholder="0"></div><div class="field"><label for="cf-pn">Porsiyon adı</label><input class="inp" id="cf-pn" placeholder="adet"></div><div class="field"><label for="cf-pg">Porsiyon (g)</label><input class="inp" id="cf-pg" inputmode="decimal" placeholder="100"></div></div>
+   <div><button class="btn primary" type="button" data-act="addCustom">Yiyeceği ekle</button></div>
+   ${cf.length?`<div>${cf.map(f=>`<div class="between" style="padding:7px 0;border-top:1px solid var(--line)"><span><b>${esc(f.name)}</b> <span class="small muted">${fmt(f.kcal)} kcal · P ${fmtMax(f.p)} · K ${fmtMax(f.c)} · Y ${fmtMax(f.f)}</span></span><button class="btn ghost sm" type="button" data-act="delCustom" data-id="${f.id}">Sil</button></div>`).join('')}</div>`:''}</div>
+`;
+}
+
+
+/* ===================== YEDEK (standalone) ===================== */
+function backupJson(){return JSON.stringify({app:'ai-trainer',v:1,exportedAt:new Date().toISOString(),settings:S.settings,days:S.days,weights:S.weights,workouts:S.workouts},null,1)}
+function exportData(){
+  const name=`ai-trainer-yedek-${todayStr()}.json`,txt=backupJson();
+  try{if(window.AndroidBridge&&AndroidBridge.saveFile){const r=AndroidBridge.saveFile(name,txt);toast(r||'Yedek kaydedildi.');return}}catch(e){}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);toast('Yedek indirildi.')}catch(e){toast('Yedek alınamadı.')}
+}
+function importData(file){
+  if(!file)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d;try{d=JSON.parse(rd.result)}catch(e){toast('Dosya okunamadı: geçerli bir yedek değil.');return}
+    if(!d||typeof d!=='object'||!d.settings||!d.days){toast('Bu dosya bir AI Trainer yedeği değil.');return}
+    const prev={settings:clone(S.settings),days:clone(S.days),weights:clone(S.weights),workouts:clone(S.workouts)};
+    S.settings={...clone(DEFAULTS),...d.settings};S.days=d.days||{};S.weights=d.weights||{};S.workouts=d.workouts||{};
+    lsSet();render();
+    toast(`Yedek yüklendi (${Object.keys(S.days).length} gün).`,()=>{Object.assign(S,prev);lsSet();render()});
+  };
+  rd.onerror=()=>toast('Dosya okunamadı.');
+  rd.readAsText(file);
+}
+window.__back=function(){
+  if(S.ui.sheet){closeSheet();return true}
+  if(S.ui.tab!=='today'){S.ui.tab='today';lsSet();render();window.scrollTo(0,0);return true}
+  return false;
+};
+/* ===================== SHEET (yemek ekleme) ===================== */
+function recentFoods(){
+  const seen=new Set(),out=[];
+  for(let i=0;i<14&&out.length<8;i++){const d=getDay(addDays(todayStr(),-i));for(const e of (d.entries||[]).slice().reverse()){if(e.food&&!seen.has(e.food)){const f=foodById(e.food);if(f){seen.add(e.food);out.push(f)}}}}
+  return out;
+}
+function openSheet(o){S.ui.sheet=o;renderSheet();setTimeout(()=>{const q=$('#q')||$('#amt')||$('#mName');if(q)q.focus()},30)}
+function closeSheet(){S.ui.sheet=null;$('#sheetRoot').innerHTML=''}
+function renderSheet(){
+  const sh=S.ui.sheet,root=$('#sheetRoot');if(!sh){root.innerHTML='';return}
+  const ml=(MEALS.find(m=>m[0]===sh.meal)||[,''])[1];
+  let body='';
+  if(sh.manual){
+    body=`<div class="field"><label for="mName">Ne yedin?</label><input class="inp" id="mName" autocomplete="off" placeholder="ör. Kantin tost + ayran"></div>
+     <div class="grid4"><div class="field"><label for="mK">kcal</label><input class="inp" id="mK" inputmode="decimal"></div><div class="field"><label for="mP">Protein g</label><input class="inp" id="mP" inputmode="decimal"></div><div class="field"><label for="mC">Karb. g</label><input class="inp" id="mC" inputmode="decimal"></div><div class="field"><label for="mF">Yağ g</label><input class="inp" id="mF" inputmode="decimal"></div></div>
+     <p class="small muted">Emin değilsen sadece kaloriyi gir; makrolar boş kalabilir.</p>
+     <div class="row"><button class="btn" type="button" data-act="sheetBack">Geri</button><button class="btn primary" type="button" data-act="addManual">${esc(ml)} için ekle</button></div>`;
+  } else if(sh.food){
+    const f=foodById(sh.food)||sh.foodObj;
+    body=`<div><b style="font-size:17px">${esc(f.name)}</b><p class="small muted">100 g: ${fmt(f.kcal)} kcal · P ${fmtMax(f.p)} · K ${fmtMax(f.c)} · Y ${fmtMax(f.f)}${f.pg?` · 1 ${esc(f.pn)} ≈ ${fmtMax(f.pg)} g`:''}</p></div>
+     <div class="row" style="align-items:flex-end"><div class="field" style="flex:1;min-width:120px"><label for="amt">Miktar</label><input class="inp" id="amt" inputmode="decimal" autocomplete="off" value="${esc(sh.amt)}"></div>
+     ${f.pg?`<div class="seg" role="group" aria-label="Birim"><button type="button" class="${sh.unit==='por'?'on':''}" data-act="unit" data-u="por">${esc(f.pn)}</button><button type="button" class="${sh.unit==='g'?'on':''}" data-act="unit" data-u="g">gram</button></div>`:''}</div>
+     ${sh.unit==='por'?`<div class="chips">${[0.5,1,1.5,2,3].map(k=>`<button type="button" class="chip" data-act="qamt" data-v="${k}">${fmtMax(k)} ${esc(f.pn)}</button>`).join('')}</div>`:''}
+     <div class="preview" id="prev"></div>
+     <div class="row">${sh.editId?'':'<button class="btn" type="button" data-act="sheetBack">Geri</button>'}<button class="btn primary" type="button" data-act="confirmAdd">${sh.editId?'Kaydet':esc(ml)+' için ekle'}</button></div>`;
+  } else {
+    body=`<input class="inp" id="q" type="search" autocomplete="off" placeholder="Yiyecek ara: tavuk, yulaf, mercimek…" value="${esc(sh.q||'')}" aria-label="Yiyecek ara">
+     <div class="chips">${CATS.map(([k,l])=>`<button type="button" class="chip${(sh.cat||'all')===k?' on':''}" data-act="cat" data-c="${k}">${l}</button>`).join('')}</div>
+     <div class="results" id="results"></div>
+     <button class="btn ghost" type="button" data-act="manual">Listede yok: kalorisini elle gir</button>`;
+  }
+  root.innerHTML=`<div class="backdrop" data-act="closeSheet"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(ml)} ekle">
+   <div class="sh"><h3>${sh.editId?'Düzenle':esc(ml)}</h3><button class="iconbtn" type="button" data-act="closeSheet" aria-label="Kapat">×</button></div><div class="sb">${body}</div></div>`;
+  if(!sh.food&&!sh.manual)renderResults();
+  if(sh.food)renderPreview();
+}
+function renderResults(){
+  const sh=S.ui.sheet,el=$('#results');if(!el)return;
+  const q=norm(sh.q||'').trim(),cat=sh.cat||'all';
+  let list=allFoods().filter(f=>(cat==='all'||f.cat===cat)&&(!q||norm(f.name).includes(q)));
+  let head='';
+  if(!q&&cat==='all'){const r=recentFoods();if(r.length){list=r;head=`<p class="small muted" style="padding:2px 0 6px">Son kullandıkların</p>`}}
+  el.innerHTML=head+(list.length?list.map(f=>`<button type="button" class="res" data-act="pick" data-id="${f.id}"><span><b>${esc(f.name)}</b><small>${f.pg?`1 ${esc(f.pn)} (${fmtMax(f.pg)} g) · `:''}P ${fmtMax(f.p)} · K ${fmtMax(f.c)} · Y ${fmtMax(f.f)} /100 g</small></span><span class="k">${fmt(f.kcal)}<small>kcal/100 g</small></span></button>`).join(''):`<p class="empty">"${esc(sh.q)}" bulunamadı. Aşağıdan elle girebilir ya da Ayarlar'dan kendi yiyeceğini ekleyebilirsin.</p>`);
+}
+function sheetGrams(){const sh=S.ui.sheet,f=foodById(sh.food)||sh.foodObj,a=num(sh.amt);if(!isFinite(a)||a<=0)return NaN;return sh.unit==='por'&&f.pg?a*f.pg:a}
+function renderPreview(){
+  const el=$('#prev');if(!el)return;const sh=S.ui.sheet,f=foodById(sh.food)||sh.foodObj,g=sheetGrams();
+  const m=isFinite(g)?macrosFor(f,g):{kcal:0,p:0,c:0,f:0};
+  el.innerHTML=`<div><div class="v">${fmt(m.kcal)}</div><div class="l">kcal${isFinite(g)?` · ${fmtMax(g,0)} g`:''}</div></div><div><div class="v" style="color:var(--pro)">${fmtMax(m.p)}</div><div class="l">protein</div></div><div><div class="v" style="color:var(--carb)">${fmtMax(m.c)}</div><div class="l">karb.</div></div><div><div class="v" style="color:var(--fat)">${fmtMax(m.f)}</div><div class="l">yağ</div></div>`;
+}
+
+/* ===================== ACTIONS ===================== */
+let toastT=null,undoFn=null;
+function toast(msg,undo){const el=$('#toast');$('#toastMsg').textContent=msg;undoFn=undo||null;$('#toastUndo').hidden=!undo;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;undoFn=null},undo?6000:3200)}
+document.getElementById('toastUndo').addEventListener('click',()=>{if(undoFn){undoFn();undoFn=null}$('#toast').hidden=true});
+
+function saveDay(d){save('days/'+d)}
+function setDayEntries(d,entries){const day=ensureDay(d);day.entries=entries;saveDay(d);render()}
+
+// rest timer
+let tInt=null,tEnd=0,actx=null;
+function beep(){try{if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;g.gain.setValueAtTime(0.0001,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.25,actx.currentTime+0.02);g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.5);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+0.55)}catch(e){}try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+function tick(){const left=Math.max(0,Math.ceil((tEnd-Date.now())/1000));$('#timerV').textContent=`${Math.floor(left/60)}:${pad(left%60)}`;if(left<=0){stopTimer();beep();toast('Dinlenme bitti, sıradaki sete geç.')}}
+function startTimer(sec){try{if(!actx){const AC=window.AudioContext||window.webkitAudioContext;if(AC)actx=new AC()}}catch(e){}tEnd=Date.now()+sec*1000;$('#timer').hidden=false;tick();clearInterval(tInt);tInt=setInterval(tick,250)}
+function stopTimer(){clearInterval(tInt);$('#timer').hidden=true}
+
+function ensureSession(date,dayId){
+  const id=sessionId(date,dayId);
+  if(!S.workouts[id])S.workouts[id]={date,dayId,sets:{},finishedAt:null};
+  if(!S.workouts[id].sets)S.workouts[id].sets={};
+  return S.workouts[id];
+}
+function exById(dayId,exId){return PROGRAM.find(p=>p.id===dayId).ex.find(e=>e.id===exId)}
+function ensureSets(sess,ex){let a=sess.sets[ex.id]||[];a=Array.from({length:ex.sets},(_,i)=>a[i]&&typeof a[i]==='object'?a[i]:{kg:'',reps:'',done:false});sess.sets[ex.id]=a;return a}
+
+(function(){
+  let tm=null;
+  const clear=()=>{clearTimeout(tm);tm=null};
+  document.addEventListener('pointerdown',ev=>{
+    const b=ev.target.closest&&ev.target.closest('[data-act="cnt"]');if(!b)return;
+    clear();
+    tm=setTimeout(()=>{
+      tm=null;window.__lp=true;
+      const id=b.dataset.id,date=S.ui.date,d=ensureDay(date);
+      if(d.entries.some(e=>e.food===id&&e.prof==='cnt'&&mealOf(e)==='ekstra')){
+        setDayEntries(date,d.entries.filter(e=>!(e.food===id&&e.prof==='cnt'&&mealOf(e)==='ekstra')));
+        try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
+      }
+    },550);
+  });
+  ['pointerup','pointercancel','pointerleave','scroll'].forEach(t=>document.addEventListener(t,clear,true));
+  ['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{if(window.__lp)setTimeout(()=>{window.__lp=false},350)},true));
+  document.addEventListener('contextmenu',ev=>{if(ev.target.closest&&ev.target.closest('[data-act="cnt"]'))ev.preventDefault()});
+})();
+document.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-act]');if(!b||!b.closest('.nut'))return;
+  const act=b.dataset.act,ds=b.dataset;
+  if(b.tagName==='A')ev.preventDefault();
+  switch(act){
+  case 'tab':S.ui.tab=ds.tab;S.ui.confirmClear=false;lsSet();render();window.scrollTo(0,0);break;
+  case 'day':S.ui.date=addDays(S.ui.date,Number(ds.n));S.ui.wDay=null;S.ui.confirmClear=false;render();break;
+  case 'setDate':S.ui.date=ds.d;S.ui.wDay=null;S.ui.confirmClear=false;render();break;
+  case 'today':S.ui.date=todayStr();S.ui.wDay=null;render();break;
+  case 'water':{const d=ensureDay(S.ui.date),n=Number(ds.n);d.water=(d.water===n?n-1:n);saveDay(S.ui.date);render();break}
+  case 'openAdd':openSheet({meal:ds.meal,q:'',cat:'all'});break;
+  case 'closeSheet':closeSheet();break;
+  case 'cat':S.ui.sheet.cat=ds.c;renderSheet();break;
+  case 'pick':{const f=foodById(ds.id);S.ui.sheet.food=f.id;S.ui.sheet.unit=f.pg?'por':'g';S.ui.sheet.amt=f.pg?'1':'100';renderSheet();const a=$('#amt');if(a){a.focus();a.select()}break}
+  case 'manual':S.ui.sheet.manual=true;renderSheet();$('#mName')&&$('#mName').focus();break;
+  case 'sheetBack':S.ui.sheet.food=null;S.ui.sheet.manual=false;renderSheet();break;
+  case 'unit':{const sh=S.ui.sheet,f=foodById(sh.food);const g=sheetGrams();sh.unit=ds.u;if(isFinite(g))sh.amt=ds.u==='g'?String(Math.round(g)):String(Math.round(g/f.pg*100)/100).replace('.',',');renderSheet();break}
+  case 'qamt':S.ui.sheet.amt=String(ds.v).replace('.',',');$('#amt').value=S.ui.sheet.amt;renderPreview();break;
+  case 'confirmAdd':{const sh=S.ui.sheet,f=foodById(sh.food),g=sheetGrams();if(!isFinite(g)){toast('Geçerli bir miktar gir (ör. 1,5 ya da 150).');break}
+    const d=ensureDay(S.ui.date);
+    if(sh.editId){const i=d.entries.findIndex(e=>e.id===sh.editId);if(i>=0){const ne=makeEntry(d.entries[i].meal,f,g);ne.id=sh.editId;d.entries[i]=ne}}
+    else d.entries.push(makeEntry(sh.meal,f,g));
+    saveDay(S.ui.date);closeSheet();render();break}
+  case 'addManual':{const name=$('#mName').value.trim()||'Elle giriş',k=num($('#mK').value);if(!isFinite(k)||k<=0){toast('Kalori değerini gir.');break}
+    const v=id=>{const x=num($(id).value);return isFinite(x)?x:0};
+    const d=ensureDay(S.ui.date);d.entries.push({id:uid(),meal:S.ui.sheet.meal,food:null,manual:true,name,g:0,kcal:Math.round(k),p:v('#mP'),c:v('#mC'),f:v('#mF'),fib:0});
+    saveDay(S.ui.date);closeSheet();render();break}
+  case 'edit':{const e=getDay(S.ui.date).entries.find(x=>x.id===ds.id);if(!e||!e.food||!foodById(e.food)){toast('Elle girilen kayıtları silip yeniden ekleyebilirsin.');break}
+    const f=foodById(e.food);const por=f.pg&&Math.abs((e.g/f.pg)*2-Math.round((e.g/f.pg)*2))<0.02;
+    openSheet({meal:e.meal,food:f.id,editId:e.id,unit:por?'por':'g',amt:por?String(Math.round(e.g/f.pg*100)/100).replace('.',','):String(e.g)});break}
+  case 'del':{const d=ensureDay(S.ui.date),prev=clone(d.entries),e=d.entries.find(x=>x.id===ds.id);const date=S.ui.date;
+    setDayEntries(date,d.entries.filter(x=>x.id!==ds.id));toast(`${e?e.name:'Kayıt'} silindi.`,()=>setDayEntries(date,prev));break}
+  case 'sup':{const d=ensureDay(S.ui.date);d.sup[ds.id]=!d.sup[ds.id];saveDay(S.ui.date);render();break}
+  case 'cnt':{
+    if(window.__lp){window.__lp=false;break}
+    const it=EKSTRA_ITEMS.find(x=>x[0]===ds.id);if(!it)break;
+    const date=S.ui.date,d=ensureDay(date),cur=d.entries.find(e=>e.food===it[0]&&e.prof==='cnt'&&mealOf(e)==='ekstra');
+    if(cur){const n=Math.round(cur.g/it[3])+1,ne={...makeEntry('ekstra',foodById(it[0]),n*it[3]),prof:'cnt',id:cur.id};
+      setDayEntries(date,d.entries.map(e=>e===cur?ne:e))}
+    else setDayEntries(date,d.entries.concat([{...makeEntry('ekstra',foodById(it[0]),it[3]),prof:'cnt'}]));
+    break}
+  case 'bgrp':S.ui.bgrp=S.ui.bgrp===ds.id?null:ds.id;render();break;
+  case 'bpOpen':S.ui.bpOpen=S.ui.bpOpen===ds.id?null:ds.id;render();break;
+  case 'bprof':{const mk=ds.meal||'kahvalti',P=PROFILES[mk][ds.id],date=S.ui.date,d=ensureDay(date),prev=clone(d.entries);
+    const es=d.entries.filter(e=>mealOf(e)===mk),on=es.length&&es.every(e=>e.prof===ds.id);
+    const rest=d.entries.filter(e=>mealOf(e)!==mk);
+    if(on){setDayEntries(date,rest);toast(`${P.name} kaldırıldı.`,()=>setDayEntries(date,prev));break}
+    setDayEntries(date,rest.concat(P.items.map(([id,g])=>({...makeEntry(mk,foodById(id),g),prof:ds.id}))));break}
+  case 'plan':{const P=PLANS[ds.plan],d=ensureDay(S.ui.date),prev=clone(d.entries),date=S.ui.date;
+    const add=P.items.map(([meal,id,g])=>makeEntry(meal,foodById(id),g));
+    setDayEntries(date,d.entries.concat(add));toast(`${P.name} eklendi.`,()=>setDayEntries(date,prev));break}
+  case 'copyYest':{const y=getDay(addDays(S.ui.date,-1)),d=ensureDay(S.ui.date),prev=clone(d.entries),date=S.ui.date;
+    setDayEntries(date,d.entries.concat((y.entries||[]).map(e=>({...clone(e),id:uid()}))));toast('Dünün öğünleri eklendi.',()=>setDayEntries(date,prev));break}
+  case 'askClear':S.ui.confirmClear=true;render();break;
+  case 'cancelClear':S.ui.confirmClear=false;render();break;
+  case 'clearDay':{const date=S.ui.date,prev=clone(getDay(date).entries||[]);S.ui.confirmClear=false;setDayEntries(date,[]);toast('Gün temizlendi.',()=>setDayEntries(date,prev));break}
+  // workouts
+  case 'wday':S.ui.wDay=ds.id;render();break;
+  case 'fillkg':{const dayId=S.ui.wDay||defaultDay(S.ui.date),ex=exById(dayId,ds.ex),sess=ensureSession(S.ui.date,dayId),a=ensureSets(sess,ex);
+    a.forEach(s=>{if(!s.done)s.kg=String(ds.kg).replace('.',',')});save('workouts/'+sessionId(S.ui.date,dayId));render();break}
+  case 'done':{const dayId=S.ui.wDay||defaultDay(S.ui.date),ex=exById(dayId,ds.ex),sess=ensureSession(S.ui.date,dayId),a=ensureSets(sess,ex),i=Number(ds.i),s=a[i];
+    if(!s.done){const kgI=$(`#kg-${ex.id}-${i}`),rI=$(`#r-${ex.id}-${i}`);
+      if(!s.reps&&rI&&rI.placeholder)s.reps=rI.placeholder;
+      if(!s.kg&&kgI&&kgI.placeholder&&kgI.placeholder!=='–')s.kg=kgI.placeholder;
+      s.done=true;startTimer(ex.rest)} else s.done=false;
+    save('workouts/'+sessionId(S.ui.date,dayId),200);render();break}
+  case 'finish':{const dayId=S.ui.wDay||defaultDay(S.ui.date),sess=ensureSession(S.ui.date,dayId);sess.finishedAt=new Date().toISOString();save('workouts/'+sessionId(S.ui.date,dayId),100);stopTimer();toast('Antrenman kaydedildi. Eline sağlık.');render();break}
+  case 'timerAdd':tEnd+=15000;tick();break;
+  case 'timerStop':stopTimer();break;
+  // progress
+  case 'saveW':{const t=todayStr(),prevW=S.weights[t];let v=num($('#wInput').value);const wa=num($('#waistInput').value);
+    if(!isFinite(v)&&prevW)v=prevW.kg;
+    if(!isFinite(v)||v<30||v>200){toast('Kiloyu kg olarak gir (ör. 69,6).');break}
+    if(isFinite(wa)&&(wa<50||wa>150)){toast('Bel çevresini cm olarak gir (ör. 78).');break}
+    const rec={date:t,kg:Math.round(v*10)/10};const w2=isFinite(wa)?wa:(prevW&&isFinite(prevW.waist)?prevW.waist:null);if(w2!=null)rec.waist=Math.round(w2*10)/10;
+    S.weights[t]=rec;S.ui.weightDraft='';S.ui.waistDraft='';save('weights/'+t,100);render();toast('Ölçüm kaydedildi.');break}
+  case 'delW':{const k=ds.k,prev=S.weights[k];delete S.weights[k];save('weights/'+k,100);render();toast(`${dLabel(k)} kaydı silindi.`,()=>{S.weights[k]=prev;save('weights/'+k,100);render()});break}
+  case 'applyAdj':S.settings.adjust=(Number(S.settings.adjust)||0)+Number(ds.d);S.settings.lastAdjust=todayStr();save('config/settings',100);render();toast(`Yeni hedef ${fmt(targets().kcal)} kcal.`);break;
+  // settings
+  case 'exportData':exportData();break;
+  case 'importData':{const f=$('#importFile');if(f){f.value='';f.click()}break}
+  case 'addCustom':{const name=$('#cf-name').value.trim(),k=num($('#cf-kcal').value);if(!name||!isFinite(k)){toast('En azından ad ve kalori gir.');break}
+    const v=id=>{const x=num($(id).value);return isFinite(x)?x:0};const pg=num($('#cf-pg').value);
+    const f={id:'c_'+uid(),name,kcal:k,p:v('#cf-p'),c:v('#cf-c'),f:v('#cf-f'),fib:v('#cf-fib'),pn:$('#cf-pn').value.trim()||'porsiyon',pg:isFinite(pg)&&pg>0?pg:100};
+    S.settings.customFoods=(S.settings.customFoods||[]).concat([f]);save('config/settings',100);render();toast(`${name} eklendi.`);break}
+  case 'delCustom':S.settings.customFoods=(S.settings.customFoods||[]).filter(f=>f.id!==ds.id);save('config/settings',100);render();break;
+  }
+});
+document.addEventListener('input',ev=>{
+  const t=ev.target;
+  if(t.id==='q'){S.ui.sheet.q=t.value;renderResults();return}
+  if(t.id==='amt'){S.ui.sheet.amt=t.value;renderPreview();return}
+  if(t.id==='wInput'){S.ui.weightDraft=t.value;return}
+  if(t.id==='waistInput'){S.ui.waistDraft=t.value;return}
+  if(t.dataset.in==='set'){const dayId=S.ui.wDay||defaultDay(S.ui.date),ex=exById(dayId,t.dataset.ex),sess=ensureSession(S.ui.date,dayId),a=ensureSets(sess,ex);
+    a[Number(t.dataset.i)][t.dataset.k]=t.value.trim();save('workouts/'+sessionId(S.ui.date,dayId),700)}
+});
+document.addEventListener('change',ev=>{
+  if(ev.target&&ev.target.id==='importFile'){importData(ev.target.files&&ev.target.files[0]);return}
+  const t=ev.target,k=t.dataset&&t.dataset.set;if(!k)return;
+  let v=t.value;
+  if(k==='birth'||k==='programStart'||k==='d3Start'){if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return}
+  else if(k==='act'){}
+  else{v=num(v);if(!isFinite(v)){render();return}
+    const lim={weight:[30,200],height:[120,230],days:[3,5],surplus:[0,800],ppk:[1.2,2.6],fatPct:[20,40],handle:[0,5],d3Drops:[0,12],adjust:[-1000,1000]}[k];
+    if(lim)v=Math.min(lim[1],Math.max(lim[0],v))}
+  S.settings[k]=v;save('config/settings',200);render();
+});
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape'&&S.ui.sheet)closeSheet();
+  if(ev.key==='Enter'&&ev.target.id==='amt'){ev.preventDefault();document.querySelector('[data-act="confirmAdd"]').click()}
+  if(ev.key==='Enter'&&(ev.target.id==='wInput'||ev.target.id==='waistInput')){ev.preventDefault();document.querySelector('[data-act="saveW"]').click()}
+});
+// gün değişince (gece yarısını geçince) bugüne geç
+let lastToday=todayStr();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&todayStr()!==lastToday){if(S.ui.date===lastToday)S.ui.date=todayStr();lastToday=todayStr();render()}});
+
+mode='local';
+
+return {
+  render,
+  weight:()=>{try{return currentWeight()}catch(e){return null}},
+  targets:()=>targets(),
+  data:()=>({settings:S.settings,days:S.days,weights:S.weights}),
+  load:d=>{if(!d)return;S.settings={...clone(DEFAULTS),...(d.settings||{})};S.days=d.days||{};S.weights=d.weights||{};lsSet()},
+  summary:()=>{const T=targets(),days={};for(const d of Object.keys(S.days).sort()){const e=S.days[d].entries||[];if(!e.length)continue;const t=sumEntries(e);
+      days[d]={kcal:Math.round(t.kcal),p:Math.round(t.p),c:Math.round(t.c),f:Math.round(t.f),fib:Math.round(t.fib),
+        meals:Object.fromEntries(MEALS.map(([k,l])=>[l,e.filter(x=>mealOf(x)===k).map(x=>`${x.name} ${amountLabel(x)} (${x.kcal} kcal)`)]).filter(([,v])=>v.length)),
+        sup:Object.keys(S.days[d].sup||{}).filter(k=>S.days[d].sup[k])}}
+    return {targets:{kcal:T.kcal,protein:T.p,carb:T.c,fat:T.f,fiber:T.fib,tdee:Math.round(T.tdee),surplus:S.settings.surplus,adjust:S.settings.adjust||0},
+      weights:S.weights,days}},
+  onDate:d=>{S.ui.date=d}
+};
+})();
 </script>
 <script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js");navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had)return;const busy=typeof st!=="undefined"&&st.run&&st.run.mode!=="done";if(!busy)location.reload()})}</script>

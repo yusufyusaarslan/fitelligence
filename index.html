@@ -818,7 +818,7 @@ const COOL=[['45 sn','Çocuk pozu'],['45 sn','Üst sırt esnetme']];
 /* ===================== RENDER: SHELL ===================== */
 const DN=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
 function renderNav(){
-  const items=[['today','Antrenman',IC.dumb],['lib','Hareketler',IC.lib]];if(STANDALONE)items.push(['coach','Koç',IC.chat]);
+  const items=[['today','Antrenman',IC.dumb],['lib','Hareketler',IC.lib]];
   document.getElementById('nav').innerHTML=items.map(([k,l,i])=>`<button type="button" data-tab="${k}" aria-current="${st.tab===k?'page':'false'}">${i}${l}</button>`).join('');
   document.getElementById('seg').innerHTML=items.map(([k,l])=>`<button type="button" data-tab="${k}" aria-current="${st.tab===k?'page':'false'}">${l}</button>`).join('');
   const ph=phaseInfo(ymd(today)),cur=ph.w?ph.cw:0;
@@ -1025,7 +1025,6 @@ function renderLib(){
 function render(){
   renderNav();renderWeek();
   if(st.tab==='lib'){renderLib();return}
-  if(st.tab==='coach'){renderCoach();return}
   st.run&&st.run.date===st.date?renderRun():renderPlan();
 }
 
@@ -1073,85 +1072,6 @@ document.addEventListener('change',e=>{
     if(!confirm('Yedek yüklensin mi? Mevcut kayıtların yerine geçer.'))return;
     st.log=j.log;store();location.reload()}catch(_){alert('Bu dosya bir Fitelligence yedeği değil.')}};
   r.readAsText(e.target.files[0]);e.target.value='';
-});
-
-/* ===================== KOÇ (Gemini) ===================== */
-const CK='fit-gemini-key',CH='fit-coach-v1',CM='fit-gemini-model';
-const MODELS=['gemini-2.5-flash','gemini-flash-latest','gemini-2.5-flash-lite','gemini-flash-lite-latest','gemini-2.0-flash'];
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const cs={busy:false,msgs:(()=>{try{return JSON.parse(localStorage.getItem(CH)||'[]')}catch(e){return []}})()};
-const CP='fit-profile';
-const getProfile=()=>{try{return localStorage.getItem(CP)||''}catch(e){return ''}};
-const getKey=()=>{try{return localStorage.getItem(CK)||''}catch(e){return ''}};
-function saveMsgs(){try{localStorage.setItem(CH,JSON.stringify(cs.msgs.slice(-30)))}catch(e){}}
-function coachContext(){
-  const t=ymd(today),ph=phaseInfo(t),p=planFor(t);
-  const prog=PROGRAM.map(d=>`${d.name} (${d.focus}): `+d.ex.map(e=>`${e.name} ${setsFor(e,t)}×${repsLabel(e)}${e.kur?' '+KUR[e.kur].w:''}`).join('; ')).join('\n');
-  const logs=Object.entries(st.log).sort().slice(-14).map(([d,v])=>`${d} ${(planFor(d)||{}).name||''}: ${v.done?'tamamlandı':'yarım'}, ${v.sets||'?'} set, ${v.dur?Math.round(v.dur/60)+' dk':''}`).join('\n')||'Henüz kayıt yok.';
-  return `Sen Fitelligence uygulamasının antrenman koçusun. Türkçe, samimi ve KISA cevap ver (en fazla 6-8 satır). Gereksiz açıklama yapma.
-Kullanıcı hakkında: ${getProfile()||'Bilgi verilmedi.'}
-Antrenman günleri: Pzt Üst A, Çar Alt A, Per Üst B, Cmt Alt B. Salı ve Cuma okul günü.
-12 haftalık döngü 26 Ekim 2026'da başladı. Bugün ${t}, ${ph.w?`hafta ${ph.cw}/12 (${ph.name}): ${ph.note}`:'program henüz başlamadı'}. Bugünkü plan: ${p?p.name:'dinlenme'}.
-Program:
-${prog}
-Son antrenmanlar:
-${logs}
-Tıbbi bir şikâyet (ağrı, baş dönmesi vb.) olursa antrenmanı bırakmasını ve doktora görünmesini söyle.`;
-}
-function md(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').split('\n').map(l=>/^\s*[-*•]\s+/.test(l)?`<li>${l.replace(/^\s*[-*•]\s+/,'')}</li>`:l?`<p>${l}</p>`:'').join('').replace(/(<li>.*?<\/li>)+/g,m=>`<ul>${m}</ul>`)}
-async function askGemini(){
-  const key=getKey();let saved='';try{saved=localStorage.getItem(CM)||''}catch(e){}
-  const order=[saved,...MODELS].filter((m,i,a)=>m&&a.indexOf(m)===i);
-  const body=JSON.stringify({systemInstruction:{parts:[{text:coachContext()}]},
-    contents:cs.msgs.slice(-12).map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]})),
-    generationConfig:{temperature:.6,maxOutputTokens:900}});
-  let busy=false,quota=false;
-  for(const m of order){for(let at=0;at<2;at++){
-    let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body})}
-    catch(e){throw new Error('İnternete bağlanılamadı.')}
-    if(r.status===404)break;
-    if(r.status>=500){busy=true;await sleep(1200*(at+1));continue}
-    if(r.status===429){quota=true;break}
-    const j=await r.json().catch(()=>({}));
-    if(r.status===400||r.status===401||r.status===403)throw new Error((j.error&&/API key/i.test(j.error.message||''))?'API anahtarı geçersiz. Anahtar\'a tıklayıp yeniden gir.':'İstek reddedildi: '+((j.error&&j.error.message)||r.status));
-    if(!r.ok)throw new Error('Gemini hata verdi ('+r.status+').');
-    try{localStorage.setItem(CM,m)}catch(e){}
-    const txt=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();
-    return txt||'Cevap boş geldi, tekrar dener misin?';
-  }}
-  if(busy)throw new Error('Gemini şu an çok yoğun. Birkaç dakika sonra tekrar dene.');
-  if(quota)throw new Error('Ücretsiz kota şimdilik doldu. Biraz sonra ya da yarın tekrar dene.');
-  throw new Error('Uygun Gemini modeli bulunamadı.');
-}
-function renderCoach(){
-  stopAnim();const v=document.getElementById('view'),key=getKey();
-  if(!key){v.innerHTML=`<section class="coach"><div class="libh"><span class="eyebrow">Gemini ile</span><h1>Koç</h1></div>
-    <div class="ckey"><p>Ücretsiz Gemini API anahtarını <b>aistudio.google.com/apikey</b> adresinden al ve buraya yapıştır. Faturalandırma açma; böylece ücret çıkmaz.</p>
-    <label class="clab">Hakkında <small>(koç bunu bilir, sadece bu cihazda saklanır)</small></label>
-    <textarea id="profIn" rows="4" placeholder="Örn: 21 yaş, 1,75 m, 70 kg. Hedefim temiz kilo almak. Evde dambıl seti, bant ve mat var.">${esc(getProfile())}</textarea>
-    <div class="crow"><input id="keyIn" type="password" placeholder="Gemini API anahtarı (AIza…)" autocomplete="off"><button type="button" id="keySave" class="cbtn">Kaydet</button></div></div></section>`;return}
-  const chips=['Bugün ne yapıyorum?','Ağırlığı artırayım mı?','Yorgunum, ne yapayım?','Bir hareketin yerine ne yapabilirim?'];
-  v.innerHTML=`<section class="coach"><div class="libh chead"><div><span class="eyebrow">Gemini ile</span><h1>Koç</h1></div>
-    <div class="cact"><button type="button" id="cClear">Temizle</button><button type="button" id="cKey">Ayarlar</button></div></div>
-    <div class="clog" id="clog">${cs.msgs.length?cs.msgs.map(m=>`<div class="cm ${m.r}">${m.r==='u'?esc(m.t):md(m.t)}</div>`).join(''):`<div class="cempty">Antrenmanınla ilgili bir şey sor.</div>`}${cs.busy?'<div class="cm a busy"><i></i><i></i><i></i></div>':''}</div>
-    ${cs.msgs.length?'':`<div class="cchips">${chips.map(c=>`<button type="button" data-ask="${esc(c)}">${esc(c)}</button>`).join('')}</div>`}
-    <form class="crow" id="cform"><input id="cin" placeholder="Mesaj yaz…" autocomplete="off" ${cs.busy?'disabled':''}><button class="cbtn" ${cs.busy?'disabled':''}>Gönder</button></form></section>`;
-  const l=document.getElementById('clog');l.scrollTop=l.scrollHeight;
-  if(!cs.busy)document.getElementById('cin').focus();
-}
-async function sendCoach(text){
-  text=(text||'').trim();if(!text||cs.busy)return;
-  cs.msgs.push({r:'u',t:text});cs.busy=true;saveMsgs();renderCoach();
-  try{cs.msgs.push({r:'a',t:await askGemini()})}catch(e){cs.msgs.push({r:'a',t:'⚠️ '+e.message,err:1})}
-  cs.busy=false;saveMsgs();if(st.tab==='coach')renderCoach();
-}
-document.addEventListener('submit',e=>{if(e.target.id==='cform'){e.preventDefault();sendCoach(document.getElementById('cin').value)}});
-document.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.ask){sendCoach(b.dataset.ask);return}
-  if(b.id==='keySave'){const k=document.getElementById('keyIn').value.trim(),pr=document.getElementById('profIn').value.trim();if(k){try{localStorage.setItem(CK,k);localStorage.setItem(CP,pr)}catch(_){}renderCoach()}}
-  if(b.id==='cKey'){if(confirm('Ayarları değiştirmek için anahtar silinecek (hakkında yazın kalır). Devam?')){try{localStorage.removeItem(CK);localStorage.removeItem(CM)}catch(_){}renderCoach()}}
-  if(b.id==='cClear'){cs.msgs=[];saveMsgs();renderCoach()}
 });
 </script>
 <script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js");navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)location.reload()})}</script>

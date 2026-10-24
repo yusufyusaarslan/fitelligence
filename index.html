@@ -441,17 +441,17 @@ const WARMUPS={
  armcirc:{id:'armcirc',name:'Kol Çevirme',mode:'vucut',reps:'20 sn',vid:'armcirc',hl:['delt']},
  catcow:{id:'catcow',name:'Kedi-Deve',mode:'vucut',reps:'8 tekrar',vid:'catcow',hl:['low','abs']},
  pullapart:{id:'pullapart',name:'Bant Pull-Apart',mode:'bant',reps:'15 tekrar',vid:'pullapart',hl:['delt','lat']},
- scappush:{id:'scappush',name:'Kürek Şınavı',mode:'vucut',reps:'10 tekrar',vid:'scappush',hl:['pec','delt']},
+ wallpush:{id:'wallpush',name:'Duvar Şınavı',mode:'vucut',reps:'10 tekrar',vid:'wallpush',hl:['pec','delt','tri']},
  bwsquat:{id:'bwsquat',name:'Vücut Ağırlığı Squat',mode:'vucut',reps:'10 tekrar',vid:'bwsquat',hl:['quad','glute']},
  gbridge:{id:'gbridge',name:'Glute Bridge',mode:'vucut',reps:'12 tekrar',vid:'gbridge',hl:['glute','ham']},
  legswing:{id:'legswing',name:'Bacak Sallama',mode:'vucut',reps:'10 / taraf',vid:'legswing',hl:['ham','glute']}
 };
-const WARM_PLAN={ua:['armcirc','catcow','pullapart','scappush'],ub:['armcirc','catcow','pullapart','scappush'],la:['catcow','legswing','gbridge','bwsquat'],lb:['catcow','legswing','gbridge','bwsquat']};
+const WARM_PLAN={ua:['armcirc','catcow','pullapart','wallpush'],ub:['armcirc','catcow','pullapart','wallpush'],la:['catcow','legswing','gbridge','bwsquat'],lb:['catcow','legswing','gbridge','bwsquat']};
 Object.assign(GUIDE,{
  armcirc:{muscles:'Omuz',steps:['Ayakta dik dur, kollar yanlara düz açık.','10 sn küçükten büyüğe öne doğru daire çiz.','10 sn geriye doğru daire çiz.'],mistakes:['Omuzları kulağa kaldırmak','Kolları bükmek']},
  catcow:{muscles:'Bel, karın',steps:['Dört ayak pozisyonu: eller omuz, dizler kalça altında.','Nefes alırken göbeği indir, göğsü ve başı kaldır (inek).','Nefes verirken sırtı yukarı yuvarla, çeneyi göğse al (kedi).','Yavaş ve kontrollü 8 kez tekrarla.'],mistakes:['Hızlı ve sarsarak yapmak','Kolları bükmek']},
  pullapart:{muscles:'Arka omuz, üst sırt',steps:['Bandı omuz genişliğinde, kollar önde düz tut.','Kolları yanlara açarak bandı göğsüne doğru ger.','Kürek kemiklerini sık, kontrollü geri dön.'],mistakes:['Dirsekleri bükmek','Belden geriye kaykılmak']},
- scappush:{muscles:'Göğüs ön kısmı, omuz',steps:['Şınav pozisyonu (zorlanırsan dizler yerde), kollar düz.','Kollar düz kalarak göğsü aşağı bırak, kürekler birleşsin.','Yeri iterek sırtı hafif yukarı yuvarla, kürekler açılsın.'],mistakes:['Dirsekleri bükmek','Kalçayı düşürmek']},
+ wallpush:{muscles:'Göğüs, omuz, arka kol',steps:['Duvara bir uzun adım mesafede dur, elleri omuz hizasında ve genişliğinde duvara koy.','Vücut baştan topuğa düz kalsın, dirsekleri bükerek göğsü duvara yaklaştır.','Kollar tam düzleşene kadar duvarı it, geri dön.'],mistakes:['Kalçayı geride bırakıp kırılmak','Dirsekleri yana açmak']},
  bwsquat:{muscles:'Ön bacak, kalça',steps:['Ayaklar omuz genişliğinde, kollar önde.','Kalçayı geri ve aşağı it, dizler ayak ucu yönünde.','Uyluklar yere paralele gelince topuktan it, kalk.'],mistakes:['Topukları kaldırmak','Dizleri içe kapatmak']},
  gbridge:{muscles:'Kalça, arka bacak',steps:['Sırtüstü yat, dizler bükülü, ayaklar yerde.','Topuklardan iterek kalçayı kaldır, omuzdan dize düz çizgi.','Tepede 1 sn sık, yavaşça in.'],mistakes:['Belden kavis yaparak kalkmak','Ayak ucundan itmek']},
  legswing:{muscles:'Arka bacak, kalça',steps:['Dik dur, eller belde (dengen zayıfsa duvara tutun).','Dış bacağı kontrollü şekilde öne-arkaya salla.','Her tarafta 10 kez, salınımı yavaşça büyüt.'],mistakes:['Belden öne eğilmek','Bacağı savurarak zorlamak']}
@@ -745,6 +745,7 @@ const VIDEO_ANIMS={
  gbridge:{ar:'2/1',src:'media/gbridge.mp4',poster:'media/gbridge.jpg',cues:[[0,'Topuklardan it, kalçayı kaldır']]},
  bwsquat:{ar:'36/55',src:'media/bwsquat.mp4',poster:'media/bwsquat.jpg',cues:[[0,'Dik dur'],[0.9,'Kalçayı geri ve aşağı'],[2.6,'Dipte',1],[3.2,'Topuklardan it, kalk']]},
  legswing:{ar:'36/55',src:'media/legswing.mp4',poster:'media/legswing.jpg',cues:[[0,'Bacağı öne-arkaya salla']]},
+ wallpush:{ar:'36/55',src:'media/wallpush.mp4',poster:'media/wallpush.jpg',cues:[[0,'Gövde düz · göğsü duvara yaklaştır']]},
  calf:{ar:'2/3',src:'media/calf.mp4',poster:'media/calf.jpg',cues:[[0,'Aşağıda',1],[.3,'Kalk'],[.95,'Tepede 1 sn',1],[1.9,'İn · 2 sn'],[3.3,'Aşağıda',1]]},
  plank:{img:true,ar:'2/1',src:'media/plank.jpg',poster:'media/plank.jpg',label:'Düz çizgi'},
  slb:{ar:'2/1',src:'media/slb.mp4',poster:'media/slb.jpg',cues:[[0,'Tepe',1],[.25,'İn · 2 sn'],[2.25,'Dip',1],[2.45,'Kalçayı it'],[3.45,'Tepede 2 sn sık',1]]},

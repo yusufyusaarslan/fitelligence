@@ -2,6 +2,7 @@ const C='fit-35b2fecc';const F=["./", "index.html", "manifest.webmanifest", "fon
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;
+ if(e.request.mode==='navigate'){e.respondWith(fetch(e.request,{cache:'no-store'}).then(r=>{const c=r.clone();caches.open(C).then(x=>x.put('./',c));return r}).catch(()=>caches.match('./')));return}
  const rg=e.request.headers.get('range');
  e.respondWith(caches.match(u.pathname.endsWith('/')?'./':e.request,{ignoreSearch:true}).then(async r=>{
   if(!r)return fetch(e.request);if(!rg)return r;

@@ -237,6 +237,7 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 /* library */
 .back{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:none;border:0;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:6px 8px 6px 2px;cursor:pointer}.back:hover{color:var(--ink,#fff)}
 .dsub{color:var(--muted);font-size:13px}
+.prep{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:rgba(240,179,35,.16);color:var(--amber-2);font-size:12px;font-weight:700}
 .tmr{display:grid;justify-items:center;gap:12px}.ring.sm{width:min(190px,52vw)}.ring.sm .tv b{font-size:50px}.ring.sm .tv span{font-size:11px;letter-spacing:.1em}
 .warm li.cur{outline:2px solid var(--amber);outline-offset:-2px}
 .libh{display:grid;gap:4px}
@@ -999,13 +1000,29 @@ function startRun(){
   st.run={date:st.date,pid:p.id,q:buildQueue(p,st.date),i:0,mode:'warm',wi:0,started:Date.now(),setStart:Date.now(),restEnd:0,restLen:0,lastBeep:-1};
   keepAwake(true);tone(660,.12);render();window.scrollTo({top:0});
 }
-function beginSets(){const r=st.run;r.mode='work';r.setStart=Date.now();tone(990,.25,.28);renderRun()}
+function autoTimer(){const r=st.run;if(r.mode!=='work')return;const p=planFor(r.date),ex=p.ex[r.q[r.i].ex];if(ex.mode==='sure'&&r.tm&&r.tm.state==='idle')tmStart()}
+function beginSets(){const r=st.run;r.mode='work';r.next=null;r.setStart=Date.now();tone(990,.25,.28);renderRun();autoTimer()}
+/* rest between sets: heavy compound 120 s, others by weight; +setup time when the exercise changes */
+function restAfter(p,q,i){const nx=q[i+1];if(!nx)return 0;const ia=q[i].ex,ib=nx.ex,a=p.ex[ia],b=p.ex[ib];
+  if(a.ss&&ib===ia+1)return 15;
+  const base=a.kur==='62'?120:a.rest>=90?(a.kur?120:90):a.rest;
+  if(ia===ib||(b.ss&&ia===ib+1))return base;
+  return base+(b.kur&&b.kur!==a.kur?30:15)}
+const plateChange=(p,q,i)=>{const nx=q[i+1];if(!nx)return '';const a=p.ex[q[i].ex],b=p.ex[nx.ex];return b.kur&&b.kur!==a.kur?KUR[b.kur].lab:''};
+function startTrans(next,sec){const r=st.run;r.mode='rest';r.next=next;r.restLen=sec;r.restEnd=Date.now()+sec*1000;r.lastBeep=-1;tone(880,.12,.2);renderRun()}
+function warmGap(r){const W=warmList(r),n=W[(r.wi||0)+1];if(!n)return 60;return n.light?20:n.mode==='bant'?15:10}
+function warmAdvance(){const r=st.run,W=warmList(r);if((r.wi||0)<W.length-1)startTrans('warm',warmGap(r));else startTrans('sets',60)}
+function advance(){const r=st.run,n=r.next;r.next=null;
+  if(n==='warm'){r.wi=(r.wi||0)+1;r.mode='warm';tone(990,.25,.28);renderRun();const W=warmList(r),w=W[r.wi];if(secsOf(w.reps))tmStart();return}
+  if(n==='sets'){beginSets();return}
+  if(n==='cool'){toCool();tmStart();return}
+  nextSet()}
 function finishSet(){
   const r=st.run,p=planFor(r.date),cur=r.q[r.i];
-  if(r.i>=r.q.length-1){toCool();return}
-  r.restLen=p.ex[cur.ex].rest;r.mode='rest';r.restEnd=Date.now()+r.restLen*1000;r.lastBeep=-1;renderRun();
+  if(r.i>=r.q.length-1){startTrans('cool',30);return}
+  r.next='set';r.restLen=restAfter(p,r.q,r.i);r.mode='rest';r.restEnd=Date.now()+r.restLen*1000;r.lastBeep=-1;renderRun();
 }
-function nextSet(){const r=st.run;r.i++;r.mode='work';r.setStart=Date.now();tone(990,.25,.28);renderRun()}
+function nextSet(){const r=st.run;r.i++;r.mode='work';r.next=null;r.setStart=Date.now();tone(990,.25,.28);renderRun();autoTimer()}
 function warmSet(ex){
   if(ex.mode==='vucut')return ['8',ex.name+' · dizler yerde'];
   return ['8',ex.name+' · '+(ex.mode==='tek'?`${kg(2)} kg`:`2 × ${kg(2)} kg`)];
@@ -1027,7 +1044,7 @@ function renderRun(){
     v.innerHTML=`<section class="donebox"><span class="donetag">${IC.check.replace('<svg','<svg width="16" height="16"')}Antrenman tamamlandı</span><h1>${esc(p.name)} bitti</h1>
       <div class="stats"><div class="stat"><b>${r.i+1}</b><span>set</span></div><div class="stat"><b>${mmss(r.dur)}</b><span>süre</span></div><div class="stat"><b>${p.ex.length}</b><span>hareket</span></div></div>
       <button type="button" class="cta" id="backPlan">Programa dön</button></section>`;return}
-  const head=`<div class="runbar"><span class="rt">${esc(p.name)} <span>· ${r.mode==='warm'?'Isınma':r.mode==='cool'?'Soğuma':`${r.i+1}/${r.q.length}`}</span></span>
+  const head=`<div class="runbar"><span class="rt">${esc(p.name)} <span>· ${r.mode==='warm'||r.next==='warm'||r.next==='sets'?'Isınma':r.mode==='cool'||r.next==='cool'?'Soğuma':`${r.i+1}/${r.q.length}`}</span></span>
       <span class="clock" id="elapsed">${mmss((Date.now()-r.started)/1000)}</span>
       ${r.mode==='warm'||r.mode==='cool'?'':'<button type="button" class="ghost" id="skipSet">Bu seti atla</button>'}<button type="button" class="ghost" id="endRun">Bitir</button></div>
     <div class="track" aria-hidden="true">${r.q.map((_,k)=>`<i class="${r.mode==='cool'||(r.mode!=='warm'&&(k<r.i||(k===r.i&&r.mode==='rest')))?'done':r.mode!=='warm'&&k===r.i?'cur':''}"></i>`).join('')}</div>`;
@@ -1035,16 +1052,30 @@ function renderRun(){
     v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
       <section class="card warm"><span class="eyebrow">2 dakika</span><h2 style="margin:0;font-family:var(--display);font-weight:800;font-size:40px;line-height:.95;text-transform:uppercase">Soğuma</h2>
         <ol>${COOL.map(([a,b],k)=>`<li data-seg="${k}"><b>${a}</b><span>${esc(b)}</span></li>`).join('')}</ol></section>
-      <div class="runside"><section class="card setcard"><span class="eyebrow">Setler bitti</span>${timerHTML(tmFor('c',COOL.reduce((s,[a])=>s+secsOf(a),0),{segs:COOL.map(([a])=>secsOf(a)),names:COOL.map(([,b])=>b),doneMsg:'Soğuma bitti, tebrikler'}),'kalan')}
+      <div class="runside"><section class="card setcard"><span class="eyebrow">Setler bitti</span>${timerHTML(tmFor('c',COOL.reduce((s,[a])=>s+secsOf(a),0),{segs:COOL.map(([a])=>secsOf(a)),names:COOL.map(([,b])=>b),onDone:()=>setTimeout(()=>{if(st.run&&st.run.mode==='cool')completeRun()},1200)}),'kalan')}
         <button type="button" class="cta big" id="coolDone">${IC.check}Bitirdim</button></section></div>
     </div></div>`;tmPaint();return}
+  if(r.mode==='rest'&&r.next&&r.next!=='set'){
+    const left=Math.max(0,(r.restEnd-Date.now())/1000);let nx=null,sub='',pl='';
+    if(r.next==='warm'){const W=warmList(r);nx=W[(r.wi||0)+1];sub=nx.reps}
+    else if(r.next==='sets'){nx=p.ex[r.q[0].ex];sub=`Set 1/${r.q[0].of} · ${repsLabel(nx)}`;pl=nx.kur?KUR[nx.kur].lab:''}
+    const ring=`<div class="ring"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
+        <circle id="ringArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/r.restLen)).toFixed(1)}"/></svg>
+        <div class="tv"><b id="restT">${mmss(Math.ceil(left))}</b><span>geçiş</span></div></div>`;
+    const side=`<section class="card restcard" role="timer" aria-live="off"><span class="eyebrow">${r.next==='sets'?'Setlere hazırlan':r.next==='cool'?'Soğumaya geç':'Sıradaki harekete geç'}</span>${ring}
+      <div class="nextup"><span>Sıradaki</span><b>${esc(nx?nx.name:'Soğuma')}</b><span>${esc(nx?sub:'2 × 45 sn esneme')}</span>${pl?`<span class="prep">Dambılları ${esc(pl)} yap</span>`:''}</div>
+      <div class="row"><button type="button" class="btn2" id="addRest">+15 sn</button><button type="button" class="btn2 am" id="goNow">Hemen başla</button></div></section>`;
+    v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
+      ${nx?`<section class="runmedia"><div class="rmh"><span class="eyebrow">Sıradaki</span><h2>${esc(nx.name)}</h2>${r.next==='sets'?setupHTML(nx):''}</div>${stageHTML(nx)}</section>`:`<section class="card warm"><span class="eyebrow">Sıradaki</span><h2 style="margin:0;font-family:var(--display);font-weight:800;font-size:40px;line-height:.95;text-transform:uppercase">Soğuma</h2><ol>${COOL.map(([a,b])=>`<li><b>${a}</b><span>${esc(b)}</span></li>`).join('')}</ol></section>`}
+      <div class="runside">${side}</div></div></div>`;
+    if(nx)mountMain(nx);return}
   if(r.mode==='warm'){
     const W=warmList(r),wi=Math.min(r.wi||0,W.length-1),w=W[wi],last=wi===W.length-1;
     const wq=`<section class="card" style="padding:12px"><span class="eyebrow" style="padding:4px 8px">Isınma</span><ol class="queue">${W.map((x,k)=>`<li class="${k<wi?'done':k===wi?'cur':''}"><span>${esc(x.light?x.name+' (hafif)':x.name)}</span><span class="qs">${esc(x.reps.replace(' tekrar · hafif','').replace(' tekrar',''))}</span></li>`).join('')}</ol></section>`;
     v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
      <section class="runmedia"><div class="rmh"><span class="eyebrow">Isınma · ${wi+1}/${W.length}</span><h2>${esc(w.name)}</h2>${w.light?`<div class="chips"><span class="chip w">${esc(w.wname.split(' · ').pop())}</span></div>`:''}${w.light?'':setupHTML(w)}</div>${stageHTML(w)}</section>
      <div class="runside"><section class="card setcard"><span class="eyebrow">${w.light?'Hafif ısınma seti':'Isınma'}</span>
-       ${secsOf(w.reps)?timerHTML(tmFor('w'+wi,secsOf(w.reps),{doneMsg:'Süre doldu, sıradaki hareket'}),'kalan'):`<div class="target"><b>${esc(w.reps.split(' ')[0])}</b><span>${esc(w.reps.split(' ').slice(1).join(' '))}</span></div>`}
+       ${secsOf(w.reps)?timerHTML(tmFor('w'+wi,secsOf(w.reps),{onDone:()=>setTimeout(()=>{if(st.run&&st.run.mode==='warm')warmAdvance()},900)}),'kalan'):`<div class="target"><b>${esc(w.reps.split(' ')[0])}</b><span>${esc(w.reps.split(' ').slice(1).join(' '))}</span></div>`}
        <button type="button" class="cta big" id="${last?'warmDone':'warmNext'}">${last?IC.play+'Isındım, başla':IC.check+'Sıradaki'}</button>
        ${last?'':'<button type="button" class="ghost" id="warmDone" style="justify-self:center">Isınmayı atla</button>'}</section>${wq}</div>
     </div></div>`;
@@ -1057,12 +1088,12 @@ function renderRun(){
       <div class="ring"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
         <circle id="ringArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/r.restLen)).toFixed(1)}"/></svg>
         <div class="tv"><b id="restT">${mmss(Math.ceil(left))}</b><span>kalan</span></div></div>
-      <div class="nextup"><span>Sıradaki · Set ${nxt.set+1}/${nxt.of}</span><b>${esc(nex.name)}</b><span>${repsLabel(nex)}${nex.kur?' · '+KUR[nex.kur].w:''}</span></div>
+      <div class="nextup"><span>Sıradaki · Set ${nxt.set+1}/${nxt.of}</span><b>${esc(nex.name)}</b><span>${repsLabel(nex)}${nex.kur?' · '+KUR[nex.kur].w:''}</span>${plateChange(p,r.q,r.i)?`<span class="prep">Dambılları ${esc(plateChange(p,r.q,r.i))} yap</span>`:''}</div>
       <div class="row"><button type="button" class="btn2" id="addRest">+15 sn</button><button type="button" class="btn2 am" id="goNow">Hemen başla</button></div></section>`
    :`<section class="card setcard">${ex.each?'<span class="eyebrow">Her taraf ayrı</span>':''}
       <div class="setno"><b>Set ${cur.set+1}</b><span>/ ${cur.of}</span></div>
       <div class="target"><b>${ex.lo}–${ex.hi}</b><span>${unit(ex)}${ex.kur?' · '+KUR[ex.kur].w:''}</span></div>
-      ${ex.mode==='sure'?timerHTML(tmFor('x'+r.i,ex.hi,{mid:ex.lo,doneMsg:'Süre doldu, seti bitir'}),'hedef '+ex.lo+'–'+ex.hi+' sn'):''}
+      ${ex.mode==='sure'?timerHTML(tmFor('x'+r.i,ex.hi,{mid:ex.lo,onDone:()=>setTimeout(()=>{if(st.run&&st.run.mode==='work')finishSet()},900)}),'hedef '+ex.lo+'–'+ex.hi+' sn'):''}
       ${ex.mode==='sure'?'':`<p class="cue">${phaseInfo(r.date).drop===1?'3':'1–2'} tekrar kala bırak</p>`}
       <button type="button" class="cta big" id="doneSet">${IC.check}Seti bitirdim</button></section>`;
   v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
@@ -1081,7 +1112,7 @@ setInterval(()=>{
   const left=(r.restEnd-Date.now())/1000,t=document.getElementById('restT');if(t)t.textContent=mmss(Math.max(0,Math.ceil(left)));
   const arc=document.getElementById('ringArc');if(arc)arc.setAttribute('stroke-dashoffset',(RING_C*(1-Math.max(0,left)/r.restLen)).toFixed(1));
   const s=Math.ceil(left);if(s<=3&&s>0&&r.lastBeep!==s){r.lastBeep=s;tone(660,.1,.18)}
-  if(left<=0)nextSet();
+  if(left<=0)advance();
 },100);
 
 /* ===================== LIBRARY ===================== */
@@ -1116,21 +1147,21 @@ document.addEventListener('click',ev=>{
   if(t.dataset.libback){st.libEx=null;renderLib();window.scrollTo({top:st.libY||0});return}
   switch(t.id){
     case 'startRun':startRun();break;
-    case 'warmDone':beginSets();break;
-    case 'warmNext':st.run.wi=(st.run.wi||0)+1;tone(880,.1);renderRun();break;
+    case 'warmDone':startTrans('sets',60);break;
+    case 'warmNext':warmAdvance();break;
     case 'coolDone':completeRun();break;
     case 'doneSet':finishSet();break;
-    case 'goNow':nextSet();break;
+    case 'goNow':advance();break;
     case 'tmGo':tmStart();break;
     case 'addRest':st.run.restEnd+=15000;st.run.restLen+=15;break;
-    case 'skipSet':if(st.run.mode==='rest')nextSet();else finishSet();break;
+    case 'skipSet':if(st.run.mode==='rest')advance();else finishSet();break;
     case 'endRun':if(st.run.mode==='cool'){completeRun();break}if(st.run.mode==='warm'||(st.run.i===0&&st.run.mode==='work'))quitRun();else{st.run.i=Math.max(0,st.run.i-(st.run.mode==='rest'?0:1));completeRun()}break;
     case 'backPlan':quitRun();break;
   }
 });
 document.addEventListener('keydown',ev=>{
   if(ev.code!=='Space'||!st.run||st.tab!=='today'||ev.target.closest('input,textarea'))return;
-  ev.preventDefault();const m=st.run.mode;if(m==='warm'){const W=warmList(st.run);if((st.run.wi||0)<W.length-1){st.run.wi++;renderRun()}else beginSets()}else if(m==='cool')completeRun();else if(m==='work')finishSet();else if(m==='rest')nextSet();
+  ev.preventDefault();const m=st.run.mode;if(m==='warm')warmAdvance();else if(m==='cool')completeRun();else if(m==='work')finishSet();else if(m==='rest')advance();
 });
 render();
 

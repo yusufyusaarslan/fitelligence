@@ -830,7 +830,7 @@ function buildQueue(p,date){
 let actx=null,wake=null;
 function tone(freq=880,dur=.18,vol=.22){try{if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;const t=actx.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+dur+.05)}catch(e){}}
 let trVoice=null;
-function speak(t){try{const s=window.speechSynthesis;if(!s)return;if(!trVoice)trVoice=(s.getVoices()||[]).find(v=>/^tr/i.test(v.lang))||null;const m=new SpeechSynthesisUtterance(t);m.lang='tr-TR';if(trVoice)m.voice=trVoice;m.rate=1.02;s.cancel();s.speak(m)}catch(e){}}
+function speak(t){return;try{const s=window.speechSynthesis;if(!s)return;if(!trVoice)trVoice=(s.getVoices()||[]).find(v=>/^tr/i.test(v.lang))||null;const m=new SpeechSynthesisUtterance(t);m.lang='tr-TR';if(trVoice)m.voice=trVoice;m.rate=1.02;s.cancel();s.speak(m)}catch(e){}}
 try{window.speechSynthesis&&window.speechSynthesis.addEventListener&&window.speechSynthesis.addEventListener('voiceschanged',()=>{trVoice=null})}catch(e){}
 const secsOf=s=>{const m=/^(\d+)\s*sn/.exec(s||'');return m?+m[1]:0};
 /* countdown timer: r.tm={key,len,end,state,segs,names,seg,mid,midSaid,lastBeep,done} */

@@ -553,6 +553,24 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .nut .banner{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 12px}
 .nut .empty{color:var(--muted);font-size:14px;padding:6px 0}
 @media (prefers-reduced-motion:no-preference){.nut .track>i{transition:width .35s ease}}
+/* layout & look matched to Fitelligence */
+.nut{max-width:none;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:16px 18px}
+.nut>.libh{grid-column:1/-1;margin-bottom:4px}
+.nut>.nfull{grid-column:1/-1}
+.nut .ncol{display:grid;gap:16px;align-content:start;min-width:0}
+.nut .card{border-radius:var(--r-lg);padding:20px}
+.nut h2.sec{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.nut .dstrip{gap:8px;margin-top:6px}
+.nut .dc{padding:10px 0;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r-md);transition:border-color .15s}
+.nut .dc:hover{border-color:var(--line-2)}
+.nut .dc.sel{background:var(--surface-2);border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow)}
+.nut .dc.sel .dn,.nut .dc.tod .dn{color:var(--amber)}
+.nut .dc .dw{font-size:11px;letter-spacing:.12em;font-weight:700}
+.nut .dc.sel .dw{color:var(--muted);opacity:1}
+.nut .dc.sel .rg .tr{stroke:var(--line);opacity:1}.nut .dc.sel .rg .pg{stroke:var(--accent)}.nut .dc.sel .rg .pg.ok{stroke:var(--ok)}.nut .dc.sel .rg .pg.hi{stroke:var(--warn)}
+.nut .advice{border-radius:var(--r-lg);padding:16px 20px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c)}
+@media (max-width:1100px){.nut{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 
 <div class="app" lang="tr">
@@ -1893,6 +1911,8 @@ const ICON={
  next:'<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
  check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
 };
+function layoutNut(){const n=document.querySelector('#view .nut');if(!n||innerWidth<1100)return;const cards=[...n.children].filter(c=>!c.classList.contains('libh')&&!c.classList.contains('nfull'));const cols=[0,1].map(()=>{const d=document.createElement('div');d.className='ncol';n.appendChild(d);return d});cards.forEach(c=>{(cols[0].offsetHeight<=cols[1].offsetHeight?cols[0]:cols[1]).appendChild(c)})}
+let nutRT=null;window.addEventListener('resize',()=>{clearTimeout(nutRT);nutRT=setTimeout(()=>{if(NUT_TABS[st.tab])render()},200)});
 const NUT_TABS={food:'today',prog:'progress',nset:'settings',nguide:'guide'};
 const TABS=[['today','Beslenme'],['train','Antrenman'],['progress','İlerleme'],['guide','Rehber'],['settings','Ayarlar']];
 
@@ -1901,7 +1921,8 @@ function render(){
   try{ss=a.selectionStart;se=a.selectionEnd}catch(e){}
   if(!NUT_TABS[st.tab])return;S.ui.tab=NUT_TABS[st.tab];
   const m=document.getElementById('view');
-  m.innerHTML='<div class="nut">'+(({today:renderToday,progress:renderProgress,guide:renderGuide,settings:renderSettings}[S.ui.tab]||renderToday)())+'</div>';
+  const HD={today:['Günlük takip','Beslenme'],progress:['Kilo ve ölçüm','İlerleme'],guide:['Beslenme rehberi','Rehber'],settings:['Hedef ve profil','Ayarlar']}[S.ui.tab]||['',''];
+  m.innerHTML='<div class="nut t-'+S.ui.tab+'"><div class="libh"><span class="eyebrow">'+HD[0]+'</span><h1>'+HD[1]+'</h1></div>'+(({today:renderToday,progress:renderProgress,guide:renderGuide,settings:renderSettings}[S.ui.tab]||renderToday)())+'</div>';layoutNut();
   if(fid){const n=document.getElementById(fid);if(n){n.focus({preventScroll:true});try{if(ss!=null)n.setSelectionRange(ss,se)}catch(e){}}}
 }
 function dayLogged(x){return (getDay(x).entries||[]).length>0||PROGRAM.some(p=>hasWork(S.workouts[sessionId(x,p.id)]))}
@@ -1956,13 +1977,13 @@ function renderToday(){
   const d=S.ui.date,day=getDay(d),T=targets(),tot=sumEntries(day.entries);
   const left=T.kcal-tot.kcal;
   const macro=(l,c,v,t)=>`<div class="macro" style="--c:var(${c})"><div class="lab">${l}</div><div class="val">${fmt(v)}<span> / ${fmt(t)} g</span></div>${bar(v,t)}</div>`;
-  let h=`<div class="card">${dateBar()}</div>
+  let h=`<div class="card nfull">${dateBar()}</div>
   <div class="card">
     <div class="kcal"><div><div class="big">${fmt(tot.kcal)}<span>/ ${fmt(T.kcal)} kcal</span></div></div>
     <div class="left"><div class="v" style="color:${left<0?'var(--warn)':'var(--ink)'}">${fmt(Math.abs(left))}</div><div class="l">${left<0?'fazla':'kalan'}</div></div></div>
     <div style="margin-top:10px">${bar(tot.kcal,T.kcal)}</div>
     <div class="macros">${macro('Protein','--pro',tot.p,T.p)}${macro('Karb.','--carb',tot.c,T.c)}${macro('Yağ','--fat',tot.f,T.f)}${macro('Lif','--fib',tot.fib,T.fib)}</div>
-    ${(()=>{const L=st.log[d];if(!L||!L.done)return '';const k=L.secs?kcalOf(L.secs):L.kcal;return `<p class="small" style="margin-top:12px">Bugünkü antrenman: <b>~${fmt(k)} kcal</b> yakıldı · ${Math.round((L.dur||0)/60)} dk. Hedef antrenman günlerini zaten içeriyor, ekstra yemene gerek yok.</p>`})()}
+    ${(()=>{const L=st.log[d];if(!L||!L.done||(L.dur||0)<300)return '';const k=L.secs?kcalOf(L.secs):L.kcal;return `<p class="small" style="margin-top:12px">Bugünkü antrenman: <b>~${fmt(k)} kcal</b> yakıldı · ${Math.round((L.dur||0)/60)} dk. Hedef antrenman günlerini zaten içeriyor, ekstra yemene gerek yok.</p>`})()}
     <p class="small muted" style="margin-top:12px">** Çay, kahve, kefir gibi diğer sıvılar hariç günde 2 litre su içmelisin.</p>
   </div>
   ${supCard(d)}`;

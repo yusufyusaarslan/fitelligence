@@ -1077,7 +1077,8 @@ document.addEventListener('change',e=>{
 
 /* ===================== KOÇ (Gemini) ===================== */
 const CK='fit-gemini-key',CH='fit-coach-v1',CM='fit-gemini-model';
-const MODELS=['gemini-2.5-flash','gemini-flash-latest','gemini-2.0-flash'];
+const MODELS=['gemini-2.5-flash','gemini-flash-latest','gemini-2.5-flash-lite','gemini-flash-lite-latest','gemini-2.0-flash'];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const cs={busy:false,msgs:(()=>{try{return JSON.parse(localStorage.getItem(CH)||'[]')}catch(e){return []}})()};
 const CP='fit-profile';
 const getProfile=()=>{try{return localStorage.getItem(CP)||''}catch(e){return ''}};
@@ -1104,18 +1105,22 @@ async function askGemini(){
   const body=JSON.stringify({systemInstruction:{parts:[{text:coachContext()}]},
     contents:cs.msgs.slice(-12).map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]})),
     generationConfig:{temperature:.6,maxOutputTokens:900}});
-  for(const m of order){
+  let busy=false,quota=false;
+  for(const m of order){for(let at=0;at<2;at++){
     let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body})}
     catch(e){throw new Error('İnternete bağlanılamadı.')}
-    if(r.status===404)continue;
+    if(r.status===404)break;
+    if(r.status>=500){busy=true;await sleep(1200*(at+1));continue}
+    if(r.status===429){quota=true;break}
     const j=await r.json().catch(()=>({}));
-    if(r.status===429)throw new Error('Bugünkü ücretsiz kota doldu. Biraz sonra ya da yarın tekrar dene.');
     if(r.status===400||r.status===401||r.status===403)throw new Error((j.error&&/API key/i.test(j.error.message||''))?'API anahtarı geçersiz. Anahtar\'a tıklayıp yeniden gir.':'İstek reddedildi: '+((j.error&&j.error.message)||r.status));
     if(!r.ok)throw new Error('Gemini hata verdi ('+r.status+').');
     try{localStorage.setItem(CM,m)}catch(e){}
     const txt=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();
     return txt||'Cevap boş geldi, tekrar dener misin?';
-  }
+  }}
+  if(busy)throw new Error('Gemini şu an çok yoğun. Birkaç dakika sonra tekrar dene.');
+  if(quota)throw new Error('Ücretsiz kota şimdilik doldu. Biraz sonra ya da yarın tekrar dene.');
   throw new Error('Uygun Gemini modeli bulunamadı.');
 }
 function renderCoach(){
@@ -1149,4 +1154,4 @@ document.addEventListener('click',e=>{
   if(b.id==='cClear'){cs.msgs=[];saveMsgs();renderCoach()}
 });
 </script>
-<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js")</script>
+<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js");navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)location.reload()})}</script>

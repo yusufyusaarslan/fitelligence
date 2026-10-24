@@ -58,6 +58,10 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 .segs i.cur{background:var(--amber-2);box-shadow:0 0 0 2px var(--amber-glow)}
 .segs i.light{background:var(--line-2)}
 .segs i.light.done{background:#A8842E}
+.sync{margin-top:6px;display:grid;gap:4px}.sync small{font-size:11px;color:var(--muted)}
+.syncf{display:flex;gap:6px}.syncf input{flex:1;min-width:0;width:0;font:inherit;font-size:12px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:inherit}
+.syncf button,.syncb{font:inherit;font-size:12.5px;font-weight:600;padding:7px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer}
+.syncb{display:flex;align-items:center;justify-content:center;gap:7px;width:100%}.syncb .dot{width:7px;height:7px;border-radius:50%;background:#3fbf7f}.syncb .dot.busy{background:var(--amber);animation:pl 1s infinite}@keyframes pl{50%{opacity:.3}}
 .bk{display:flex;gap:6px}
 .bk button{flex:1;font:inherit;font-size:12.5px;font-weight:600;padding:7px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer}
 .bk button:hover{color:var(--ink);border-color:var(--amber)}
@@ -905,7 +909,8 @@ function renderNav(){
   document.getElementById('cycle').innerHTML=`<span class="eyebrow">12 haftalık döngü</span>
     ${ph.w?`<span class="cw">Hafta ${ph.cw}<small> / 12</small></span><span class="cn">${esc(ph.name)}</span>`:`<span class="cw">Başlamadı</span><span class="cn">26 Ekim Pazartesi</span>`}
     <div class="segs" aria-hidden="true">${[...Array(12)].map((_,i)=>`<i class="${i+1===7||i+1===12?'light':''}${i+1<cur?' done':''}${i+1===cur?' cur':''}"></i>`).join('')}</div>
-    ${STANDALONE?'':'<!--'}<div class="bk"><button type="button" id="bkOut">Yedekle</button><button type="button" id="bkIn">Geri yükle</button><input type="file" id="bkFile" accept="application/json,.json" hidden></div>${STANDALONE?'':'-->'}
+    ${STANDALONE?'':'<!--'}<div class="bk"><button type="button" id="bkOut">Yedekle</button><button type="button" id="bkIn">Geri yükle</button><input type="file" id="bkFile" accept="application/json,.json" hidden></div>
+    <div class="sync" id="syncBox">${syncHTML()}</div>${STANDALONE?'':'-->'}
 `;
 }
 function renderWeek(){
@@ -1046,6 +1051,33 @@ function warmSet(ex){
 function warmList(r){const p=PROGRAM.find(x=>x.id===r.pid),first=p.ex[r.q[0].ex],ws=warmSet(first);
   return (WARM_PLAN[r.pid]||[]).map(k=>WARMUPS[k]).concat([Object.assign({},first,{reps:ws[0]+' tekrar · hafif',light:true,wname:ws[1]})])}
 function toCool(){const r=st.run;r.mode='cool';r.coolStart=Date.now();tone(784,.15);renderRun()}
+/* ===== GitHub sync: private repo yusufyusaarslan/fitelligence-data, log.json ===== */
+const GH_REPO='yusufyusaarslan/fitelligence-data',GH_FILE='log.json';
+const ghTok=()=>{try{return localStorage.getItem('fit-gh-token')||''}catch(e){return ''}};
+let syncState={busy:false,msg:'',open:false};
+function syncHTML(){const t=ghTok(),last=(()=>{try{return localStorage.getItem('fit-gh-last')||''}catch(e){return ''}})();
+  if(!t||syncState.open)return `<div class="syncf"><input id="ghTok" type="password" placeholder="GitHub token (github_pat_…)" autocomplete="off"><button type="button" id="ghSave">Bağla</button></div>${syncState.msg?`<small>${esc(syncState.msg)}</small>`:'<small>Kayıtlar gizli GitHub deposuna gider</small>'}`;
+  return `<button type="button" id="ghSync" class="syncb"><span class="dot${syncState.busy?' busy':''}"></span>${syncState.busy?'Gönderiliyor…':syncState.msg||('Senkron'+(last?' · '+new Date(last).toLocaleString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''))}</button>`}
+function paintSync(){const b=document.getElementById('syncBox');if(b)b.innerHTML=syncHTML()}
+const b64=s=>btoa(unescape(encodeURIComponent(s)));
+function exportData(){const days={};
+  for(const d of Object.keys(st.log).sort()){const e=st.log[d],p=planFor(d);
+    days[d]=Object.assign({},e,{plan:p?p.name:null,phase:phaseInfo(d).name,week:phaseInfo(d).w||0,
+      exercises:p?p.ex.map(x=>({name:x.name,sets:setsFor(x,d),reps:repsLabel(x),load:x.kur?kurW(x):MODE[x.mode]})):[],
+      kcal:e.secs?kcalOf(e.secs):e.kcal})}
+  return {app:'fitelligence',v:1,updated:new Date().toISOString(),bodyKg:bodyKg(),heightCm:HEIGHT,programStart:PROGRAM_START,
+    schedule:Object.fromEntries(Object.entries(DOW_PLAN).map(([k,v])=>[['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'][k],PROGRAM.find(p=>p.id===v).name])),days}}
+async function ghPush(){const t=ghTok();if(!t||syncState.busy)return;syncState.busy=true;syncState.msg='';paintSync();
+  const H={Authorization:'Bearer '+t,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+  try{let sha;const g=await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`,{headers:H,cache:'no-store'});
+    if(g.status===401||g.status===403)throw new Error('Token geçersiz ya da yetkisi yok');
+    if(g.status===404){const rp=await fetch(`https://api.github.com/repos/${GH_REPO}`,{headers:H});if(rp.status===404)throw new Error('fitelligence-data deposu bulunamadı')}
+    else if(g.ok)sha=(await g.json()).sha;
+    const r=await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`,{method:'PUT',headers:H,body:JSON.stringify({message:'Kayıt güncellendi '+ymd(new Date()),content:b64(JSON.stringify(exportData(),null,1)),sha})});
+    if(!r.ok)throw new Error('Gönderilemedi ('+r.status+')');
+    try{localStorage.setItem('fit-gh-last',new Date().toISOString())}catch(e){}syncState.msg='';
+  }catch(e){syncState.msg=e.message||'Bağlantı hatası'}
+  syncState.busy=false;paintSync()}
 /* calories: MET × kg × hours per phase, active (net of resting 1 MET), corrected by Mifflin–St Jeor RMR */
 const MET={warm:3.5,work:6.0,rest:1.5,cool:2.3},HEIGHT=175,BYEAR=2005;
 const bodyKg=()=>{try{const v=parseFloat(localStorage.getItem('fit-bw'));return v>30&&v<200?v:70}catch(e){return 70}};
@@ -1055,7 +1087,7 @@ function phaseKey(r){return r.mode==='warm'?'warm':r.mode==='work'?'work':r.mode
 setInterval(()=>{const r=st.run;if(!r||r.mode==='done')return;const now=Date.now(),dt=Math.min(5,(now-(r.lastAcc||now))/1000);r.lastAcc=now;const k=phaseKey(r);if(!k)return;r.secs=r.secs||{};r.secs[k]=(r.secs[k]||0)+dt},1000);
 function completeRun(){
   const r=st.run;const dur=Math.round((Date.now()-r.started)/1000);
-  st.log[r.date]={done:true,sets:r.i+1,dur,secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();
+  st.log[r.date]={done:true,sets:r.i+1,dur,secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();setTimeout(ghPush,500);
   r.mode='done';r.dur=dur;keepAwake(false);tone(784,.15);setTimeout(()=>tone(1046,.3),170);renderRun();
 }
 function quitRun(){st.run=null;keepAwake(false);stopAnim();render()}
@@ -1206,10 +1238,13 @@ document.addEventListener('click',e=>{
     setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
   }
   if(e.target.id==='bkIn')document.getElementById('bkFile').click();
+  if(e.target.id==='ghSave'){const v=(document.getElementById('ghTok').value||'').trim();if(!/^(github_pat_|ghp_)/.test(v)){syncState.msg='Bu bir GitHub token gibi görünmüyor';paintSync();return}
+    try{localStorage.setItem('fit-gh-token',v)}catch(_){}syncState.open=false;syncState.msg='';paintSync();ghPush()}
+  if(e.target.closest('#ghSync')){if(syncState.msg&&/Token|bulunamadı/.test(syncState.msg)){syncState.open=true;paintSync()}else ghPush()}
 });
 document.addEventListener('change',e=>{
   if(e.target.id==='bw'){const v=parseFloat(e.target.value);if(v>30&&v<200){try{localStorage.setItem('fit-bw',String(v))}catch(_){}
-    const r=st.run;if(r&&r.secs){const k=kcalOf(r.secs);document.getElementById('kcalV').textContent=k;if(st.log[r.date]){st.log[r.date].kcal=k;store()}}}return}
+    const r=st.run;if(r&&r.secs){const k=kcalOf(r.secs);document.getElementById('kcalV').textContent=k;if(st.log[r.date]){st.log[r.date].kcal=k;store()}}setTimeout(ghPush,800)}return}
   if(e.target.id!=='bkFile'||!e.target.files[0])return;
   const r=new FileReader();
   r.onload=()=>{try{const j=JSON.parse(r.result);if(j.app!=='fitelligence'||typeof j.log!=='object')throw 0;

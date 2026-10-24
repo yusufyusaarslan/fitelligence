@@ -243,6 +243,10 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .dsub{color:var(--muted);font-size:13px}
 .prep{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:rgba(240,179,35,.16);color:var(--amber-2);font-size:12px;font-weight:700}
 .kcalnote{margin:0;color:var(--muted);font-size:13px}.kcalnote input{width:64px;margin:0 2px;padding:3px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:inherit;font:inherit;font-weight:700;text-align:center}
+.slog{width:100%;display:grid;gap:8px;padding:12px;border-radius:var(--r-sm);background:var(--surface-2);text-align:left}
+.srow{display:flex;gap:10px;flex-wrap:wrap}.stp{display:flex;align-items:center;gap:6px}.stp button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink,#fff);font-size:18px;font-weight:700;cursor:pointer}
+.stp button:hover{border-color:var(--amber)}.stp b{min-width:42px;text-align:center;font-family:var(--display);font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}.stp span{font-size:12px;color:var(--muted)}
+.prev{margin:0;font-size:13px;color:var(--muted)}.prev b{color:var(--ink,#fff)}
 .tmr{display:grid;justify-items:center;gap:12px}.ring.sm{width:min(190px,52vw)}.ring.sm .tv b{font-size:50px}.ring.sm .tv span{font-size:11px;letter-spacing:.1em}
 .warm li.cur{outline:2px solid var(--amber);outline-offset:-2px}
 .libh{display:grid;gap:4px}
@@ -1038,7 +1042,22 @@ function advance(){const r=st.run,n=r.next;r.next=null;
   if(n==='sets'){beginSets();return}
   if(n==='cool'){toCool();tmStart();return}
   nextSet()}
-function finishSet(){
+/* ===== per-set log ===== */
+const KUR_N={'44':4,'22':2,'62':6};
+const kurKg=ex=>ex.kur?HANDLE+KUR_N[ex.kur]*PLATE:null;
+const fmtKg=v=>Number(v).toLocaleString('tr-TR',{maximumFractionDigits:1});
+function lastLog(id,before){const ds=Object.keys(st.log).filter(d=>d<before&&st.log[d].log).sort().reverse();
+  for(const d of ds){const L=st.log[d].log.filter(x=>x&&x.id===id);if(L.length)return L}return null}
+function recordSet(){const r=st.run,p=planFor(r.date),cur=r.q[r.i],ex=p.ex[cur.ex];r.logSets=r.logSets||[];
+  const prev=lastLog(ex.id,r.date),pv=prev&&prev.find(x=>x.set===cur.set+1);
+  let reps=pv?pv.reps:ex.lo;if(ex.mode==='sure'&&r.tm&&r.tm.key==='x'+r.i){const el=r.tm.state==='done'?r.tm.len:r.tm.state==='run'?r.tm.len-(r.tm.end-Date.now())/1000:r.tm.paused?r.tm.len-r.tm.paused/1000:0;if(el>0)reps=Math.round(el)}
+  r.logSets[r.i]={id:ex.id,name:ex.name,set:cur.set+1,reps,unit:ex.mode==='sure'?'sn':'tekrar',kg:pv&&pv.kg!=null?pv.kg:kurKg(ex)}}
+function logHTML(){const r=st.run,L=r.logSets&&r.logSets[r.i];if(!L)return '';
+  return `<div class="slog"><span class="eyebrow">${esc(L.name)} · Set ${L.set} kaydı</span><div class="srow">
+    <div class="stp"><button type="button" data-lg="reps:-1">−</button><b id="lgR">${L.reps}</b><button type="button" data-lg="reps:1">+</button><span>${L.unit}</span></div>
+    ${L.kg!=null?`<div class="stp"><button type="button" data-lg="kg:-2.5">−</button><b id="lgK">${fmtKg(L.kg)}</b><button type="button" data-lg="kg:2.5">+</button><span>kg</span></div>`:''}</div></div>`}
+function finishSet(skip){
+  if(skip){const r=st.run;r.logSets=r.logSets||[];r.logSets[r.i]=null}else recordSet();
   const r=st.run,p=planFor(r.date),cur=r.q[r.i];
   if(r.i>=r.q.length-1){startTrans('cool',30);return}
   r.next='set';r.restLen=restAfter(p,r.q,r.i);r.mode='rest';r.restEnd=Date.now()+r.restLen*1000;r.lastBeep=-1;renderRun();
@@ -1087,7 +1106,7 @@ function phaseKey(r){return r.mode==='warm'?'warm':r.mode==='work'?'work':r.mode
 setInterval(()=>{const r=st.run;if(!r||r.mode==='done')return;const now=Date.now(),dt=Math.min(5,(now-(r.lastAcc||now))/1000);r.lastAcc=now;const k=phaseKey(r);if(!k)return;r.secs=r.secs||{};r.secs[k]=(r.secs[k]||0)+dt},1000);
 function completeRun(){
   const r=st.run;const dur=Math.round((Date.now()-r.started)/1000);
-  st.log[r.date]={done:true,sets:r.i+1,dur,secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();setTimeout(ghPush,500);
+  st.log[r.date]={done:true,sets:r.i+1,dur,log:(r.logSets||[]).filter(Boolean),secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();setTimeout(ghPush,500);
   r.mode='done';r.dur=dur;keepAwake(false);tone(784,.15);setTimeout(()=>tone(1046,.3),170);renderRun();
 }
 function quitRun(){st.run=null;keepAwake(false);stopAnim();render()}
@@ -1118,7 +1137,7 @@ function renderRun(){
     const ring=`<div class="ring"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
         <circle id="ringArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/r.restLen)).toFixed(1)}"/></svg>
         <div class="tv"><b id="restT">${mmss(Math.ceil(left))}</b><span>geçiş</span></div></div>`;
-    const side=`<section class="card restcard" role="timer" aria-live="off"><span class="eyebrow">${r.next==='sets'?'Setlere hazırlan':r.next==='cool'?'Soğumaya geç':'Sıradaki harekete geç'}</span>${ring}
+    const side=`<section class="card restcard" role="timer" aria-live="off">${r.next==='cool'?logHTML():''}<span class="eyebrow">${r.next==='sets'?'Setlere hazırlan':r.next==='cool'?'Soğumaya geç':'Sıradaki harekete geç'}</span>${ring}
       <div class="nextup"><span>Sıradaki</span><b>${esc(nx?nx.name:'Soğuma')}</b><span>${esc(nx?sub:'2 × 45 sn esneme')}</span>${pl?`<span class="prep">Dambılları ${esc(pl)} yap</span>`:''}</div>
       <div class="row"><button type="button" class="btn2" id="addRest">+15 sn</button><button type="button" class="btn2 am" id="goNow">Hemen başla</button></div></section>`;
     v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
@@ -1140,7 +1159,7 @@ function renderRun(){
   const show=resting&&nex?nex:ex,sq=resting?nxt:cur;
   const qlist=`<section class="card" style="padding:12px"><span class="eyebrow" style="padding:4px 8px">Sıra</span><ol class="queue">${r.q.map((x,k)=>`<li class="${k<r.i||(k===r.i&&resting)?'done':k===(resting?r.i+1:r.i)?'cur':''}"><span>${esc(p.ex[x.ex].name)}</span><span class="qs">${x.set+1}/${x.of}</span></li>`).join('')}</ol></section>`;
   const left=Math.max(0,(r.restEnd-Date.now())/1000);
-  const side=resting?`<section class="card restcard" role="timer" aria-live="off"><span class="eyebrow">Mola</span>
+  const side=resting?`<section class="card restcard" role="timer" aria-live="off">${logHTML()}<span class="eyebrow">Mola</span>
       <div class="ring"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
         <circle id="ringArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/r.restLen)).toFixed(1)}"/></svg>
         <div class="tv"><b id="restT">${mmss(Math.ceil(left))}</b><span>kalan</span></div></div>
@@ -1148,6 +1167,7 @@ function renderRun(){
       <div class="row"><button type="button" class="btn2" id="addRest">+15 sn</button><button type="button" class="btn2 am" id="goNow">Hemen başla</button></div></section>`
    :`<section class="card setcard">${ex.each?'<span class="eyebrow">Her taraf ayrı</span>':''}
       <div class="setno"><b>Set ${cur.set+1}</b><span>/ ${cur.of}</span></div>
+      ${(()=>{const pv=lastLog(ex.id,r.date);if(!pv)return '';const s=pv.find(x=>x.set===cur.set+1)||pv[pv.length-1];return `<p class="prev">Geçen sefer: <b>${s.reps} ${s.unit}</b>${s.kg!=null?' · '+fmtKg(s.kg)+' kg':''}</p>`})()}
       <div class="target"><b>${ex.lo}–${ex.hi}</b><span>${unit(ex)}${ex.kur?' · '+kurW(ex):''}</span></div>
       ${ex.mode==='sure'?timerHTML(tmFor('x'+r.i,ex.hi,{mid:ex.lo,onDone:()=>setTimeout(()=>{if(st.run&&st.run.mode==='work')finishSet()},900)}),'hedef '+ex.lo+'–'+ex.hi+' sn'):''}
       ${ex.mode==='sure'?'':`<p class="cue">${phaseInfo(r.date).drop===1?'3':'1–2'} tekrar kala bırak</p>`}
@@ -1203,6 +1223,9 @@ document.addEventListener('click',ev=>{
   if(t.dataset.ex){st.ex=t.dataset.ex;renderPlan();return}
   if(t.dataset.open){st.libY=window.scrollY;st.libEx=t.dataset.open;renderLib();window.scrollTo({top:0});return}
   if(t.dataset.libback){st.libEx=null;renderLib();window.scrollTo({top:st.libY||0});return}
+  if(t.dataset.lg){const r=st.run,L=r&&r.logSets&&r.logSets[r.i];if(!L)return;const [k,d]=t.dataset.lg.split(':');
+    if(k==='reps'){L.reps=Math.max(0,L.reps+(+d)*(L.unit==='sn'?5:1));document.getElementById('lgR').textContent=L.reps}
+    else{L.kg=Math.max(0.5,Math.round((L.kg+(+d))*10)/10);document.getElementById('lgK').textContent=fmtKg(L.kg)}return}
   switch(t.id){
     case 'startRun':startRun();break;
     case 'warmDone':startTrans('sets',60);break;
@@ -1212,7 +1235,7 @@ document.addEventListener('click',ev=>{
     case 'goNow':advance();break;
     case 'tmGo':tmStart();break;
     case 'addRest':st.run.restEnd+=15000;st.run.restLen+=15;break;
-    case 'skipSet':if(st.run.mode==='rest')advance();else finishSet();break;
+    case 'skipSet':if(st.run.mode==='rest')advance();else finishSet(true);break;
     case 'endRun':if(st.run.mode==='cool'){completeRun();break}if(st.run.mode==='warm'||(st.run.i===0&&st.run.mode==='work'))quitRun();else{st.run.i=Math.max(0,st.run.i-(st.run.mode==='rest'?0:1));completeRun()}break;
     case 'backPlan':quitRun();break;
   }

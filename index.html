@@ -835,7 +835,7 @@ function speak(t){return;try{const s=window.speechSynthesis;if(!s)return;if(!trV
 try{window.speechSynthesis&&window.speechSynthesis.addEventListener&&window.speechSynthesis.addEventListener('voiceschanged',()=>{trVoice=null})}catch(e){}
 const secsOf=s=>{const m=/^(\d+)\s*sn/.exec(s||'');return m?+m[1]:0};
 /* countdown timer: r.tm={key,len,end,state,segs,names,seg,mid,midSaid,lastBeep,done} */
-function tmFor(key,len,o={}){const r=st.run;if(!r.tm||r.tm.key!==key)r.tm=Object.assign({key,len,end:0,state:'idle',seg:0,lastBeep:-1,midSaid:false},o);return r.tm}
+function tmFor(key,len,o={}){const r=st.run;if(!r.tm||r.tm.key!==key)r.tm=Object.assign({key,len,end:0,state:'idle',seg:0,lastBeep:-1,midSaid:false},o);else r.tm.onDone=o.onDone;return r.tm}
 function timerHTML(tm,label){const left=tm.state==='run'?Math.max(0,(tm.end-Date.now())/1000):tm.state==='done'?0:tm.len;
   return `<div class="tmr"><div class="ring sm"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
    <circle id="tmArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/tm.len)).toFixed(1)}"/></svg>
@@ -1163,6 +1163,12 @@ document.addEventListener('keydown',ev=>{
   if(ev.code!=='Space'||!st.run||st.tab!=='today'||ev.target.closest('input,textarea'))return;
   ev.preventDefault();const m=st.run.mode;if(m==='warm')warmAdvance();else if(m==='cool')completeRun();else if(m==='work')finishSet();else if(m==='rest')advance();
 });
+/* active workout survives reloads / sleep / app updates */
+const LSR='fit-run-v1';
+function saveRun(){try{if(st.run&&st.run.mode!=='done')localStorage.setItem(LSR,JSON.stringify(st.run,(k,v)=>k==='onDone'?undefined:v));else localStorage.removeItem(LSR)}catch(e){}}
+(function(){try{const r=JSON.parse(localStorage.getItem(LSR)||'null');if(r&&r.mode!=='done'&&Date.now()-r.started<4*3600e3&&planFor(r.date)){st.run=r;st.date=r.date;st.tab='today';keepAwake(true)}else localStorage.removeItem(LSR)}catch(e){}})();
+setInterval(saveRun,1000);window.addEventListener('pagehide',saveRun);document.addEventListener('visibilitychange',saveRun);
+document.addEventListener('pointerdown',()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume&&actx.resume()}catch(e){}},{once:true});
 render();
 
 /* ===================== BACKUP ===================== */
@@ -1184,4 +1190,4 @@ document.addEventListener('change',e=>{
   r.readAsText(e.target.files[0]);e.target.value='';
 });
 </script>
-<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js");navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)location.reload()})}</script>
+<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js");navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had)return;const busy=typeof st!=="undefined"&&st.run&&st.run.mode!=="done";if(!busy)location.reload()})}</script>

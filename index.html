@@ -307,6 +307,7 @@ kbd{font:600 11px var(--body);border:1px solid var(--line-2);border-bottom-width
 .ckey{display:grid;gap:12px;padding:18px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}.ckey p{margin:0;color:var(--muted)}.ckey b{color:var(--ink)}
 .clab{font-size:13px;font-weight:600;color:var(--muted)}.clab small{font-weight:500}
 .ckey textarea{font:inherit;font-size:14px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);resize:vertical}.ckey textarea:focus{outline:none;border-color:var(--amber)}
+.sidetag{display:block;width:fit-content;margin-inline:auto;font-size:22px;font-weight:800;line-height:1;letter-spacing:.02em;padding:8px 18px;border-radius:999px;background:var(--amber);color:#1a1205;margin-bottom:4px}.sidetag.l{background:var(--surface-3);color:var(--text,#fff);outline:2px solid var(--amber)}
 /* ===== Nutrition module (ported from AI Trainer), scoped under .nut ===== */
 .nut{--accent:var(--amber);--accent-ink:var(--amber-ink);--accent-soft:rgba(240,179,35,.14);
   --pro:#EC7A5F;--carb:#E2B33F;--fat:#66BD8A;--fib:#A596E0;--ok:#5BBF89;--warn:#DFA647;--bad:#E86F5E;
@@ -626,7 +627,7 @@ const PROGRAM=[
   {id:'lb3',name:'Tek Bacak RDL',mode:'tek',kur:'44',sets:3,lo:8,hi:12,rest:60,each:true,vid:'slrdl',hl:['ham','glute','low'],cue:'Kalçayı geriye it, kalça hizan yere paralel kalsın. İlk haftalarda duvara dokun.'},
   {id:'lb4',name:'Yüzüstü Dambıl Leg Curl',mode:'tek',kur:'22',sets:3,lo:10,hi:15,rest:60,vid:'pronecurl',hl:['ham'],cue:'Yüzüstü yat, dambılı iki ayağının arasında dik sıkıştır. Kalça matta kalsın, dizleri bükerek dambılı yukarı getir, 2 sn\'de indir.'},
   {id:'lb5',name:'Tek Bacak Kalça Köprüsü',mode:'vucut',sets:3,lo:10,hi:15,rest:45,each:true,vid:'slb',hl:['glute','ham'],cue:'Bir ayak yerde, topuktan it, tepede 2 sn sık.'},
-  {id:'lb6',name:'Dead Bug',mode:'vucut',sets:3,lo:10,hi:12,rest:45,each:true,vid:'deadbug',hl:['abs'],cue:'Bel mata yapışık, karşı kol ve bacağı yavaşça uzat.'}]}
+  {id:'lb6',name:'Dead Bug',mode:'vucut',sets:3,lo:10,hi:12,rest:45,each:true,alt:true,vid:'deadbug',hl:['abs'],cue:'Bel mata yapışık, karşı kol ve bacağı yavaşça uzat.'}]}
 ];
 const DOW_PLAN={1:'ua',3:'la',4:'ub',6:'lb'};
 const PROGRAM_START='2026-10-26';
@@ -1113,7 +1114,7 @@ function buildQueue(p,date){
     if(a.ss&&p.ex[i+1]){const b=p.ex[i+1],nb=setsFor(b,date);
       for(let s=0;s<Math.max(na,nb);s++){if(s<na)q.push({ex:i,set:s,of:na});if(s<nb)q.push({ex:i+1,set:s,of:nb})}
       i++;continue}
-    for(let s=0;s<na;s++)q.push({ex:i,set:s,of:na});
+    for(let s=0;s<na;s++){if(a.each&&!a.alt){q.push({ex:i,set:s,of:na,side:'Sağ'});q.push({ex:i,set:s,of:na,side:'Sol'})}else q.push({ex:i,set:s,of:na})}
   }
   return q;
 }
@@ -1270,10 +1271,10 @@ function renderPlan(){
     v.innerHTML=`<section class="restday"><span class="eyebrow">${dlabel}</span><h1>${dow===2||dow===5?'Okul günü':'Dinlenme günü'}</h1></section>`;return}
   if(!st.ex||!p.ex.some(e=>e.id===st.ex))st.ex=p.ex[0].id;
   const ex=p.ex.find(e=>e.id===st.ex),q=buildQueue(p,st.date),fin=st.log[st.date];
-  const est=Math.round((q.reduce((s,x)=>s+45+p.ex[x.ex].rest,0)+300)/60);
+  const est=Math.round((q.reduce((s,x)=>s+(x.side==='Sağ'?40:45+p.ex[x.ex].rest),0)+300)/60);
   v.innerHTML=`<section class="hero" aria-label="Günün antrenmanı">
     <div><span class="eyebrow">${dlabel}</span><h1>${esc(p.name)}</h1><div class="focus">${esc(p.focus)}</div>
-     <div class="stats"><div class="stat"><b>${p.ex.length}</b><span>hareket</span></div><div class="stat"><b>${q.length}</b><span>set</span></div><div class="stat"><b>~${est}</b><span>dakika</span></div>
+     <div class="stats"><div class="stat"><b>${p.ex.length}</b><span>hareket</span></div><div class="stat"><b>${q.filter(x=>x.side!=='Sol').length}</b><span>set</span></div><div class="stat"><b>~${est}</b><span>dakika</span></div>
      ${fin&&fin.done?`<div class="stat" style="align-self:center"><span class="donetag">${IC.check.replace('<svg','<svg width="16" height="16"')}Tamamlandı · ${Math.round(fin.dur/60)} dk${fin.secs?' · '+kcalOf(fin.secs)+' kcal':''}</span></div>`:''}</div></div>
     <button type="button" class="cta" id="startRun">${IC.play}${fin&&fin.done?'Tekrar başlat':'Antrenmanı başlat'}</button>
    </section>
@@ -1299,7 +1300,8 @@ function startRun(){
 function autoTimer(){const r=st.run;if(r.mode!=='work')return;const p=planFor(r.date),ex=p.ex[r.q[r.i].ex];if(ex.mode==='sure'&&r.tm&&r.tm.state==='idle')tmStart()}
 function beginSets(){const r=st.run;r.mode='work';r.next=null;r.setStart=Date.now();tone(990,.25,.28);renderRun();autoTimer()}
 /* rest between sets: heavy compound 120 s, others by weight; +setup time when the exercise changes */
-function restAfter(p,q,i){const nx=q[i+1];if(!nx)return 0;const ia=q[i].ex,ib=nx.ex,a=p.ex[ia],b=p.ex[ib];
+function sideName(ex,sd){const up=ex.id[0]==='u';return sd+(ex.id==='lb6'?'':up?' kol':' bacak')}
+function restAfter(p,q,i){const nx=q[i+1];if(!nx)return 0;if(q[i].side==='Sağ'&&nx.side==='Sol'&&nx.ex===q[i].ex)return 5;const ia=q[i].ex,ib=nx.ex,a=p.ex[ia],b=p.ex[ib];
   if(a.ss&&ib===ia+1)return 15;
   const base=a.kur==='62'?120:a.rest>=90?(a.kur?120:90):a.rest;
   if(ia===ib||(b.ss&&ia===ib+1))return base;
@@ -1320,11 +1322,11 @@ const fmtKg=v=>Number(v).toLocaleString('tr-TR',{maximumFractionDigits:1});
 function lastLog(id,before){const ds=Object.keys(st.log).filter(d=>d<before&&st.log[d].log).sort().reverse();
   for(const d of ds){const L=st.log[d].log.filter(x=>x&&x.id===id);if(L.length)return L}return null}
 function recordSet(){const r=st.run,p=planFor(r.date),cur=r.q[r.i],ex=p.ex[cur.ex];r.logSets=r.logSets||[];
-  const prev=lastLog(ex.id,r.date),pv=prev&&prev.find(x=>x.set===cur.set+1);
+  const prev=lastLog(ex.id,r.date),pv=prev&&(prev.find(x=>x.set===cur.set+1&&(x.side||null)===(cur.side||null))||prev.find(x=>x.set===cur.set+1));
   let reps=pv?pv.reps:ex.lo;if(ex.mode==='sure'&&r.tm&&r.tm.key==='x'+r.i){const el=r.tm.state==='done'?r.tm.len:r.tm.state==='run'?r.tm.len-(r.tm.end-Date.now())/1000:r.tm.paused?r.tm.len-r.tm.paused/1000:0;if(el>0)reps=Math.round(el)}
-  r.logSets[r.i]={id:ex.id,name:ex.name,set:cur.set+1,reps,unit:ex.mode==='sure'?'sn':'tekrar',kg:pv&&pv.kg!=null?pv.kg:kurKg(ex)}}
+  r.logSets[r.i]={id:ex.id,name:ex.name,set:cur.set+1,side:cur.side,reps,unit:ex.mode==='sure'?'sn':'tekrar',kg:pv&&pv.kg!=null?pv.kg:kurKg(ex)}}
 function logHTML(){const r=st.run,L=r.logSets&&r.logSets[r.i];if(!L)return '';
-  return `<div class="slog"><span class="eyebrow">${esc(L.name)} · Set ${L.set} kaydı</span><div class="srow">
+  return `<div class="slog"><span class="eyebrow">${esc(L.name)} · Set ${L.set}${L.side?' '+L.side:''} kaydı</span><div class="srow">
     <div class="stp"><button type="button" data-lg="reps:-1">−</button><b id="lgR">${L.reps}</b><button type="button" data-lg="reps:1">+</button><span>${L.unit}</span></div>
     ${L.kg!=null?`<div class="stp"><button type="button" data-lg="kg:-2.5">−</button><b id="lgK">${fmtKg(L.kg)}</b><button type="button" data-lg="kg:2.5">+</button><span>kg</span></div>`:''}</div></div>`}
 function finishSet(skip){
@@ -1379,7 +1381,7 @@ function phaseKey(r){return r.mode==='warm'?'warm':r.mode==='work'?'work':r.mode
 setInterval(()=>{const r=st.run;if(!r||r.mode==='done')return;const now=Date.now(),dt=Math.min(5,(now-(r.lastAcc||now))/1000);r.lastAcc=now;const k=phaseKey(r);if(!k)return;r.secs=r.secs||{};r.secs[k]=(r.secs[k]||0)+dt},1000);
 function completeRun(){
   const r=st.run;const dur=Math.round((Date.now()-r.started)/1000);
-  st.log[r.date]={done:true,sets:r.i+1,dur,log:(r.logSets||[]).filter(Boolean),secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();setTimeout(ghPush,500);
+  st.log[r.date]={done:true,sets:r.q.slice(0,r.i+1).filter(x=>x.side!=='Sol').length,dur,log:(r.logSets||[]).filter(Boolean),secs:r.secs||{},kcal:kcalOf(r.secs),finishedAt:new Date().toISOString()};store();setTimeout(ghPush,500);
   r.mode='done';r.dur=dur;keepAwake(false);tone(784,.15);setTimeout(()=>tone(1046,.3),170);renderRun();
 }
 function quitRun(){st.run=null;keepAwake(false);stopAnim();render()}
@@ -1430,23 +1432,23 @@ function renderRun(){
     mountMain(w);return}
   const cur=r.q[r.i],ex=p.ex[cur.ex],resting=r.mode==='rest',nxt=r.q[r.i+1],nex=nxt?p.ex[nxt.ex]:null;
   const show=resting&&nex?nex:ex,sq=resting?nxt:cur;
-  const qlist=`<section class="card" style="padding:12px"><span class="eyebrow" style="padding:4px 8px">Sıra</span><ol class="queue">${r.q.map((x,k)=>`<li class="${k<r.i||(k===r.i&&resting)?'done':k===(resting?r.i+1:r.i)?'cur':''}"><span>${esc(p.ex[x.ex].name)}</span><span class="qs">${x.set+1}/${x.of}</span></li>`).join('')}</ol></section>`;
+  const qlist=`<section class="card" style="padding:12px"><span class="eyebrow" style="padding:4px 8px">Sıra</span><ol class="queue">${r.q.map((x,k)=>`<li class="${k<r.i||(k===r.i&&resting)?'done':k===(resting?r.i+1:r.i)?'cur':''}"><span>${esc(p.ex[x.ex].name)}</span><span class="qs">${x.set+1}/${x.of}${x.side?' '+x.side:''}</span></li>`).join('')}</ol></section>`;
   const left=Math.max(0,(r.restEnd-Date.now())/1000);
   const side=resting?`<section class="card restcard" role="timer" aria-live="off">${logHTML()}<span class="eyebrow">Mola</span>
       <div class="ring"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="108" fill="none" stroke="var(--surface-3)" stroke-width="12"/>
         <circle id="ringArc" cx="120" cy="120" r="108" fill="none" stroke="var(--amber)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1-left/r.restLen)).toFixed(1)}"/></svg>
         <div class="tv"><b id="restT">${mmss(Math.ceil(left))}</b><span>kalan</span></div></div>
-      <div class="nextup"><span>Sıradaki · Set ${nxt.set+1}/${nxt.of}</span><b>${esc(nex.name)}</b><span>${repsLabel(nex)}${nex.kur?' · '+kurW(nex):''}</span>${plateChange(p,r.q,r.i)?`<span class="prep">Dambılları ${esc(plateChange(p,r.q,r.i))} yap</span>`:''}</div>
+      <div class="nextup"><span>Sıradaki · Set ${nxt.set+1}/${nxt.of}${nxt.side?' · '+sideName(nex,nxt.side):''}</span><b>${esc(nex.name)}</b><span>${repsLabel(nex)}${nex.kur?' · '+kurW(nex):''}</span>${plateChange(p,r.q,r.i)?`<span class="prep">Dambılları ${esc(plateChange(p,r.q,r.i))} yap</span>`:''}</div>
       <div class="row"><button type="button" class="btn2" id="addRest">+15 sn</button><button type="button" class="btn2 am" id="goNow">Hemen başla</button></div></section>`
-   :`<section class="card setcard">${ex.each?'<span class="eyebrow">Her taraf ayrı</span>':''}
+   :`<section class="card setcard">${cur.side?`<div class="sidetag ${cur.side==='Sol'?'l':''}">${sideName(ex,cur.side)}</div>`:ex.each?'<span class="eyebrow">Her taraf ayrı</span>':''}
       <div class="setno"><b>Set ${cur.set+1}</b><span>/ ${cur.of}</span></div>
-      ${(()=>{const pv=lastLog(ex.id,r.date);if(!pv)return '';const s=pv.find(x=>x.set===cur.set+1)||pv[pv.length-1];return `<p class="prev">Geçen sefer: <b>${s.reps} ${s.unit}</b>${s.kg!=null?' · '+fmtKg(s.kg)+' kg':''}</p>`})()}
+      ${(()=>{const pv=lastLog(ex.id,r.date);if(!pv)return '';const s=pv.find(x=>x.set===cur.set+1&&(x.side||null)===(cur.side||null))||pv.find(x=>x.set===cur.set+1)||pv[pv.length-1];return `<p class="prev">Geçen sefer: <b>${s.reps} ${s.unit}</b>${s.kg!=null?' · '+fmtKg(s.kg)+' kg':''}</p>`})()}
       <div class="target"><b>${ex.lo}–${ex.hi}</b><span>${unit(ex)}${ex.kur?' · '+kurW(ex):''}</span></div>
       ${ex.mode==='sure'?timerHTML(tmFor('x'+r.i,ex.hi,{mid:ex.lo,onDone:()=>setTimeout(()=>{if(st.run&&st.run.mode==='work')finishSet()},900)}),'hedef '+ex.lo+'–'+ex.hi+' sn'):''}
       ${ex.mode==='sure'?'':`<p class="cue">${phaseInfo(r.date).drop===1?'3':'1–2'} tekrar kala bırak</p>`}
-      <button type="button" class="cta big" id="doneSet">${IC.check}Seti bitirdim</button></section>`;
+      <button type="button" class="cta big" id="doneSet">${IC.check}${cur.side==='Sağ'?'Sağı bitirdim':cur.side==='Sol'?'Solu bitirdim':'Seti bitirdim'}</button></section>`;
   v.innerHTML=`<div class="runwrap">${head}<div class="runbody">
-     <section class="runmedia"><div class="rmh"><span class="eyebrow">${resting?'Sıradaki hareket':'Şimdi'} · Set ${sq.set+1}/${sq.of}</span><h2>${esc(show.name)}</h2><div class="chips">${chipsHTML(show)}</div>${setupHTML(show)}</div>${stageHTML(show)}</section>
+     <section class="runmedia"><div class="rmh"><span class="eyebrow">${resting?'Sıradaki hareket':'Şimdi'} · Set ${sq.set+1}/${sq.of}${sq.side?' · '+sq.side:''}</span><h2>${esc(show.name)}</h2><div class="chips">${chipsHTML(show)}</div>${setupHTML(show)}</div>${stageHTML(show)}</section>
      <div class="runside">${side}${qlist}</div>
     </div></div>`;
   mountMain(show);

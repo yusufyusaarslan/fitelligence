@@ -597,7 +597,7 @@ const HANDLE=0.5, PLATE=2.5;
 const kg=n=>(HANDLE+n*PLATE).toLocaleString('tr-TR',{maximumFractionDigits:1});
 const KUR={'44':{lab:'4+4 plaka',w:`2 × ${kg(4)} kg`,v:kg(4)},'22':{lab:'2+2 plaka',w:`2 × ${kg(2)} kg`,v:kg(2)},'62':{lab:'6+2 plaka',w:`${kg(6)} kg ağır dambıl`,v:kg(6)}};
 const MODE={vucut:'Vücut ağırlığı',tek:'Tek dambıl',cift:'İki dambıl',bant:'Loop bant',sure:'Süre'};
-const PROGRAM=[
+const PROGRAM_V1=[
  {id:'ua',name:'Üst A',focus:'Göğüs · sırt · kol',ex:[
   {id:'ua1',name:'Şınav',mode:'vucut',sets:4,lo:8,hi:15,rest:90,anim:'pushup',cue:'Gövde tahta gibi düz, göğüs yere iki parmak kalana kadar in. 15 tekrarı geçince ayaklarını sandalyeye al.'},
   {id:'ua2',name:'Dambıl Floor Press',mode:'cift',kur:'44',sets:3,lo:10,hi:15,rest:90,vid:'floor',hl:['pec','tri','delt'],cue:'Matta sırt üstü, dizler bükülü. Dirsekler gövdeyle 45°; kol yere değince 1 sn bekle, sonra it.'},
@@ -629,7 +629,33 @@ const PROGRAM=[
   {id:'lb5',name:'Tek Bacak Kalça Köprüsü',mode:'vucut',sets:3,lo:10,hi:15,rest:45,each:true,vid:'slb',hl:['glute','ham'],cue:'Bir ayak yerde, topuktan it, tepede 2 sn sık.'},
   {id:'lb6',name:'Dead Bug',mode:'vucut',sets:3,lo:10,hi:12,rest:45,each:true,alt:true,vid:'deadbug',hl:['abs'],cue:'Bel mata yapışık, karşı kol ve bacağı yavaşça uzat.'}]}
 ];
-const DOW_PLAN={1:'ua',3:'la',4:'ub',6:'lb'};
+const DOW_PLAN_V1={1:'ua',3:'la',4:'ub',6:'lb'};
+/* 29 Ekim 2026'dan itibaren: haftada 3 gün tam vücut, A ve B sırayla (Pzt-Çar-Cmt) */
+const SWITCH_DATE='2026-10-29',TRAIN_DOW=[1,3,6];
+const _ex=id=>PROGRAM_V1.flatMap(p=>p.ex).find(e=>e.id===id);
+const pick=(id,o)=>Object.assign({},_ex(id),o||{});
+const PROGRAM=[
+ {id:'fa',name:'Tam Vücut A',focus:'Bacak · göğüs · sırt · omuz · kol',ex:[
+  pick('la1',{sets:4}),
+  pick('ua1',{sets:3}),
+  pick('la3',{sets:3}),
+  pick('ua3',{sets:3}),
+  pick('ub2',{sets:3}),
+  pick('ua6',{sets:3}),
+  pick('ua7',{sets:3}),
+  pick('la6',{sets:2})]},
+ {id:'fb',name:'Tam Vücut B',focus:'Bacak · kalça · göğüs · sırt · omuz',ex:[
+  pick('la2',{sets:3}),
+  pick('ua2',{sets:4}),
+  pick('la4',{sets:3}),
+  pick('ub1',{sets:3}),
+  pick('ua5',{sets:3}),
+  pick('ub5',{sets:3}),
+  pick('ub6',{sets:3}),
+  pick('lb6',{sets:2})]}
+];
+const ALL_PLANS=PROGRAM.concat(PROGRAM_V1);
+const DOW_PLAN={1:'fa/fb',3:'fa/fb',6:'fa/fb'};
 const PROGRAM_START='2026-10-26';
 
 /* ===================== GUIDE TEXT ===================== */
@@ -726,7 +752,7 @@ const WARMUPS={
  gbridge:{id:'gbridge',name:'Glute Bridge',mode:'vucut',reps:'12 tekrar',vid:'gbridge',hl:['glute','ham']},
  legswing:{id:'legswing',name:'Bacak Sallama',mode:'vucut',reps:'10 / taraf',vid:'legswing',hl:['ham','glute']}
 };
-const WARM_PLAN={ua:['armcirc','catcow','pullapart','wallpush'],ub:['armcirc','catcow','pullapart','wallpush'],la:['catcow','legswing','gbridge','bwsquat'],lb:['catcow','legswing','gbridge','bwsquat']};
+const WARM_PLAN={fa:['catcow','armcirc','legswing','bwsquat'],fb:['catcow','pullapart','legswing','gbridge'],ua:['armcirc','catcow','pullapart','wallpush'],ub:['armcirc','catcow','pullapart','wallpush'],la:['catcow','legswing','gbridge','bwsquat'],lb:['catcow','legswing','gbridge','bwsquat']};
 Object.assign(GUIDE,{
  armcirc:{muscles:'Omuz',steps:['Ayakta dik dur, kollar yanlara düz açık.','10 sn küçükten büyüğe öne doğru daire çiz.','10 sn geriye doğru daire çiz.'],mistakes:['Omuzları kulağa kaldırmak','Kolları bükmek']},
  catcow:{muscles:'Bel, karın',steps:['Dört ayak pozisyonu: eller omuz, dizler kalça altında.','Nefes alırken göbeği indir, göğsü ve başı kaldır (inek).','Nefes verirken sırtı yukarı yuvarla, çeneyi göğse al (kedi).','Yavaş ve kontrollü 8 kez tekrarla.'],mistakes:['Hızlı ve sarsarak yapmak','Kolları bükmek']},
@@ -1083,7 +1109,10 @@ const st={tab:'today',date:null,ex:null,log:load(),run:null,wk:0};
 let anim=null;
 function stopAnim(){if(anim){anim.stop();anim=null}}
 function weekDays(off=st.wk){const d=new Date(today);const dow=(d.getDay()+6)%7;d.setDate(d.getDate()-dow+7*off);return [...Array(7)].map((_,i)=>{const x=new Date(d);x.setDate(d.getDate()+i);return x})}
-function planFor(date){return PROGRAM.find(p=>p.id===DOW_PLAN[parse(date).getDay()])||null}
+function planFor(date){const dt=parse(date),dow=dt.getDay();
+  if(date<SWITCH_DATE)return PROGRAM_V1.find(p=>p.id===DOW_PLAN_V1[dow])||null;
+  const k=TRAIN_DOW.indexOf(dow);if(k<0)return null;
+  const wk=Math.floor((dt-parse(PROGRAM_START))/864e5/7);return PROGRAM[((wk*3+k)%2+2)%2]}
 function phaseInfo(date){
   const w=Math.floor((parse(date)-parse(PROGRAM_START))/864e5/7)+1;
   if(w<1)return {w:0,name:'Başlamadan önce',drop:0,note:'Program 26 Ekim Pazartesi başlıyor. Bu hafta istersen bir antrenmanı deneme olarak yap; hareketleri öğren.'};
@@ -1300,7 +1329,7 @@ function startRun(){
 function autoTimer(){const r=st.run;if(r.mode!=='work')return;const p=planFor(r.date),ex=p.ex[r.q[r.i].ex];if(ex.mode==='sure'&&r.tm&&r.tm.state==='idle')tmStart()}
 function beginSets(){const r=st.run;r.mode='work';r.next=null;r.setStart=Date.now();tone(990,.25,.28);renderRun();autoTimer()}
 /* rest between sets: heavy compound 120 s, others by weight; +setup time when the exercise changes */
-function sideName(ex,sd){const up=ex.id[0]==='u';return sd+(ex.id==='lb6'?'':up?' kol':' bacak')}
+function sideName(ex,sd){const up=ex.id[0]==='u'||ex.id==='ub1';return sd+(ex.id==='lb6'?'':up?' kol':' bacak')}
 function restAfter(p,q,i){const nx=q[i+1];if(!nx)return 0;if(q[i].side==='Sağ'&&nx.side==='Sol'&&nx.ex===q[i].ex)return 5;const ia=q[i].ex,ib=nx.ex,a=p.ex[ia],b=p.ex[ib];
   if(a.ss&&ib===ia+1)return 15;
   const base=a.kur==='62'?120:a.rest>=90?(a.kur?120:90):a.rest;
@@ -1340,7 +1369,7 @@ function warmSet(ex){
   if(ex.mode==='vucut')return ['8',ex.name+' · dizler yerde'];
   return ['8',ex.name+' · '+(ex.mode==='tek'?`${kg(2)} kg`:`2 × ${kg(2)} kg`)];
 }
-function warmList(r){const p=PROGRAM.find(x=>x.id===r.pid),first=p.ex[r.q[0].ex],ws=warmSet(first);
+function warmList(r){const p=ALL_PLANS.find(x=>x.id===r.pid),first=p.ex[r.q[0].ex],ws=warmSet(first);
   return (WARM_PLAN[r.pid]||[]).map(k=>WARMUPS[k]).concat([Object.assign({},first,{reps:ws[0]+' tekrar · hafif',light:true,wname:ws[1]})])}
 function toCool(){const r=st.run;r.mode='cool';r.coolStart=Date.now();tone(784,.15);renderRun()}
 /* ===== GitHub sync: private repo yusufyusaarslan/fitelligence-data, log.json ===== */
@@ -1359,7 +1388,7 @@ function exportData(){const days={};
       kcal:e.secs?kcalOf(e.secs):e.kcal})}
   return {app:'fitelligence',v:1,updated:new Date().toISOString(),bodyKg:bodyKg(),heightCm:HEIGHT,programStart:PROGRAM_START,
     nutrition:typeof NUT!=='undefined'?NUT.summary():null,
-    schedule:Object.fromEntries(Object.entries(DOW_PLAN).map(([k,v])=>[['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'][k],PROGRAM.find(p=>p.id===v).name])),days}}
+    schedule:{Pzt:'Tam Vücut A/B (sırayla)',Çar:'Tam Vücut A/B (sırayla)',Cmt:'Tam Vücut A/B (sırayla)',not:'29 Ekim 2026 öncesi: Pzt Üst A, Çar Alt A, Per Üst B, Cmt Alt B'},days}}
 let nutT=null;window.nutChanged=()=>{clearTimeout(nutT);nutT=setTimeout(ghPush,15000)};
 async function ghPush(){const t=ghTok();if(!t||syncState.busy)return;syncState.busy=true;syncState.msg='';paintSync();
   const H={Authorization:'Bearer '+t,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
@@ -1387,7 +1416,7 @@ function completeRun(){
 function quitRun(){st.run=null;keepAwake(false);stopAnim();render()}
 const RING_C=2*Math.PI*108;
 function renderRun(){
-  const r=st.run,p=PROGRAM.find(x=>x.id===r.pid),v=document.getElementById('view');stopAnim();
+  const r=st.run,p=ALL_PLANS.find(x=>x.id===r.pid),v=document.getElementById('view');stopAnim();
   document.getElementById('weekbox').hidden=true;
   if(r.mode==='done'){
     v.innerHTML=`<section class="donebox"><span class="donetag">${IC.check.replace('<svg','<svg width="16" height="16"')}Antrenman tamamlandı</span><h1>${esc(p.name)} bitti</h1>
@@ -2126,7 +2155,7 @@ function renderProgress(){
    ${(ad.kind==='up'||ad.kind==='down')?(ad.locked?`<p class="small muted">Son ayarlamanın üzerinden 2 hafta geçmedi; etkisini görmek için bekle.</p>`:`<div><button class="btn primary sm" type="button" data-act="applyAdj" data-d="${ad.delta}">${ad.delta>0?'+':''}${ad.delta} kcal uygula (yeni hedef ${fmt(T.kcal+ad.delta)})</button></div>`):''}
    ${S.settings.adjust?`<p class="small muted">Şu ana kadarki toplam ayar: ${S.settings.adjust>0?'+':''}${S.settings.adjust} kcal.</p>`:''}</div>
   <div class="card"><h2 class="sec" style="margin-bottom:10px">Son 14 gün kalori</h2>${kcalChart()}</div>
-  <div class="card"><div class="between"><h2 class="sec">Antrenman</h2><span class="small num">son 4 haftada ${wkSessions} / 16 seans</span></div>${bar(wkSessions,16)}</div>
+  <div class="card"><div class="between"><h2 class="sec">Antrenman</h2><span class="small num">son 4 haftada ${wkSessions} / 12 seans</span></div>${bar(wkSessions,12)}</div>
   <div class="card"><h2 class="sec" style="margin-bottom:6px">Ölçüm kayıtları</h2>${ks.length?`<div class="wlist">${ks.map(k=>`<div class="r"><span>${dLabel(k)} ${parseYmd(k).getFullYear()} <span class="muted small">${DOW[parseYmd(k).getDay()]}</span></span><span class="num" style="font-size:17px">${fmt(S.weights[k].kg,1)} kg${isFinite(S.weights[k].waist)?` <span class="muted" style="font-size:14px">· ${fmt(S.weights[k].waist,1)} cm</span>`:''}</span><button class="x" style="border:0;background:none;color:var(--muted);font-size:18px" type="button" data-act="delW" data-k="${k}" aria-label="${dLabel(k)} kaydını sil">×</button></div>`).join('')}</div>`:`<p class="empty">Henüz ölçüm kaydı yok.</p>`}</div>`;
   return h;
 }
